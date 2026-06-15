@@ -408,6 +408,97 @@
 }
 
 /* ============================================================
+   HORIZONTAL WORK GALLERY
+   ============================================================ */
+.work-h {
+  position: relative;
+  padding-block: var(--section-y);
+  overflow: hidden;
+}
+.work-h__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+.work-h__head h2 {
+  font-size: var(--fs-h2);
+}
+.work-h__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+.work-h__viewport.is-swipe {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.work-h__track {
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding-inline: var(--gutter);
+  width: max-content;
+  will-change: transform;
+}
+.work-panel {
+  flex: 0 0 auto;
+  width: min(68vw, 640px);
+  position: relative;
+  scroll-snap-align: center;
+}
+.work-panel__index {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.work-panel__media {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  margin-top: 0.8rem;
+}
+.work-panel__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s var(--ease), filter 1s var(--ease);
+  filter: saturate(0.92);
+}
+.work-panel:hover .work-panel__media img {
+  transform: scale(1.05);
+  filter: saturate(1.08);
+}
+.work-panel__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1.1rem;
+  gap: 1rem;
+}
+.work-panel__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.work-panel__tag {
+  font-size: var(--fs-small);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+@media (max-width: 720px) {
+  .work-panel {
+    width: 82vw;
+  }
+}
+
+/* ============================================================
    MARQUEE
    ============================================================ */
 .marquee {

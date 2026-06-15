@@ -56,3 +56,24 @@ export function renderWork(targetId = "work-grid") {
     )
     .join("");
 }
+
+// Wide panels for the home horizontal gallery.
+export function renderWorkPanels(targetId = "work-h-track") {
+  const track = document.getElementById(targetId);
+  if (!track) return;
+  track.innerHTML = projects
+    .map(
+      (p, i) => `
+      <a class="work-panel" href="/work/#${p.slug}" data-cursor="View" aria-label="${p.title}">
+        <span class="work-panel__index">0${i + 1}</span>
+        <div class="work-panel__media">
+          <img src="${placeholderArt(p.title, p.c1, p.c2)}" alt="${p.title} — ${p.tag}" loading="lazy" />
+        </div>
+        <div class="work-panel__meta">
+          <span class="work-panel__title">${p.title}</span>
+          <span class="work-panel__tag">${p.tag} · ${p.year}</span>
+        </div>
+      </a>`
+    )
+    .join("");
+}
