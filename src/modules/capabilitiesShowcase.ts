@@ -38,51 +38,105 @@ const web: Draw = (g, w, h, t) => {
     [0.52, 0.46, 0.4, 0.2],
     [0.52, 0.7, 0.4, 0.18],
   ];
-  blocks.forEach((b, i) => {
-    const p = (Math.sin(t * 1.5 - i * 0.6) + 1) / 2;
-    g.fillStyle = i === 1 ? `rgba(46,91,255,${0.25 + p * 0.4})` : `rgba(243,241,236,${0.08 + p * 0.14})`;
-    roundRect(g, x + bw * b[0], y + 26 + (bh - 26) * b[1], bw * b[2], (bh - 26) * b[3], 5);
-    g.fill();
+  // A pointer visits each block in turn and "selects" it.
+  const active = Math.floor(t / 1.4) % blocks.length;
+  const blockRect = (b: number[]) => ({
+    bx: x + bw * b[0],
+    by: y + 26 + (bh - 26) * b[1],
+    bwid: bw * b[2],
+    bhei: (bh - 26) * b[3],
   });
+  blocks.forEach((b, i) => {
+    const r = blockRect(b);
+    const sel = i === active;
+    g.fillStyle = sel ? "rgba(46,91,255,0.55)" : "rgba(243,241,236,0.1)";
+    roundRect(g, r.bx, r.by, r.bwid, r.bhei, 5);
+    g.fill();
+    if (sel) {
+      g.strokeStyle = ACCENT;
+      g.lineWidth = 1.5;
+      g.stroke();
+    }
+  });
+  // Pointer easing toward the centre of the active block.
+  const tr = blockRect(blocks[active]);
+  const tx = tr.bx + tr.bwid * 0.5;
+  const ty = tr.by + tr.bhei * 0.5;
+  const ease2 = Math.min(1, ((t % 1.4) / 0.6));
+  const k = ease2 < 1 ? 1 - Math.pow(1 - ease2, 3) : 1;
+  webCursor.x += (tx - webCursor.x) * 0.12 * (0.5 + k);
+  webCursor.y += (ty - webCursor.y) * 0.12 * (0.5 + k);
+  drawPointer(g, webCursor.x, webCursor.y);
 };
+const webCursor = { x: 0, y: 0 };
+function drawPointer(g: CanvasRenderingContext2D, x: number, y: number) {
+  g.save();
+  g.translate(x, y);
+  g.fillStyle = LIGHT;
+  g.beginPath();
+  g.moveTo(0, 0);
+  g.lineTo(0, 16);
+  g.lineTo(4.5, 11.5);
+  g.lineTo(11, 11);
+  g.closePath();
+  g.fill();
+  g.restore();
+}
 
-// 3D & WebGL — a rotating wireframe cube projected to 2D.
+// 3D & WebGL — a rotating wireframe icosahedron with depth-shaded edges.
+const PHI = (1 + Math.sqrt(5)) / 2;
+const ICO_V: number[][] = [
+  [-1, PHI, 0], [1, PHI, 0], [-1, -PHI, 0], [1, -PHI, 0],
+  [0, -1, PHI], [0, 1, PHI], [0, -1, -PHI], [0, 1, -PHI],
+  [PHI, 0, -1], [PHI, 0, 1], [-PHI, 0, -1], [-PHI, 0, 1],
+].map(([x, y, z]) => {
+  const l = Math.hypot(x, y, z);
+  return [x / l, y / l, z / l];
+});
+const ICO_E: number[][] = (() => {
+  const edges: number[][] = [];
+  for (let i = 0; i < ICO_V.length; i++)
+    for (let j = i + 1; j < ICO_V.length; j++) {
+      const d = Math.hypot(
+        ICO_V[i][0] - ICO_V[j][0],
+        ICO_V[i][1] - ICO_V[j][1],
+        ICO_V[i][2] - ICO_V[j][2]
+      );
+      if (d < 1.2) edges.push([i, j]);
+    }
+  return edges;
+})();
+
 const webgl: Draw = (g, w, h, t) => {
   const cx = w / 2,
     cy = h / 2,
-    s = Math.min(w, h) * 0.22;
-  const v = [
-    [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-    [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1],
-  ];
-  const e = [
-    [0, 1], [1, 2], [2, 3], [3, 0],
-    [4, 5], [5, 6], [6, 7], [7, 4],
-    [0, 4], [1, 5], [2, 6], [3, 7],
-  ];
-  const ry = t * 0.6,
-    rx = t * 0.4;
-  const proj = v.map(([x, y, z]) => {
+    s = Math.min(w, h) * 0.3;
+  const ry = t * 0.5,
+    rx = t * 0.32;
+  const proj = ICO_V.map(([x, y, z]) => {
     let X = x * Math.cos(ry) - z * Math.sin(ry);
     let Z = x * Math.sin(ry) + z * Math.cos(ry);
-    let Y = y * Math.cos(rx) - Z * Math.sin(rx);
+    const Y = y * Math.cos(rx) - Z * Math.sin(rx);
     Z = y * Math.sin(rx) + Z * Math.cos(rx);
     const f = 3 / (3 + Z);
-    return [cx + X * s * f, cy + Y * s * f];
+    return { x: cx + X * s * f, y: cy + Y * s * f, z: Z };
   });
-  g.lineWidth = 1.5;
-  e.forEach(([a, b], i) => {
-    g.strokeStyle = i % 3 === 0 ? ACCENT : LIGHT;
-    g.globalAlpha = g.globalAlpha; // keep set alpha
+  const baseAlpha = g.globalAlpha;
+  g.lineWidth = 1.4;
+  ICO_E.forEach(([a, b]) => {
+    const depth = (proj[a].z + proj[b].z) / 2; // -1 (near) .. 1 (far)
+    g.globalAlpha = baseAlpha * (0.35 + (1 - (depth + 1.5) / 3) * 0.65);
+    g.strokeStyle = LIGHT;
     g.beginPath();
-    g.moveTo(proj[a][0], proj[a][1]);
-    g.lineTo(proj[b][0], proj[b][1]);
+    g.moveTo(proj[a].x, proj[a].y);
+    g.lineTo(proj[b].x, proj[b].y);
     g.stroke();
   });
+  g.globalAlpha = baseAlpha;
   proj.forEach((p) => {
     g.fillStyle = ACCENT;
     g.beginPath();
-    g.arc(p[0], p[1], 2.5, 0, Math.PI * 2);
+    g.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
     g.fill();
   });
 };
