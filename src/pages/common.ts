@@ -8,6 +8,7 @@ import { initCursor } from "../modules/cursor";
 import { initReveals } from "../modules/reveals";
 import { initMagnetic } from "../modules/magnetic";
 import { initMenu } from "../modules/menu";
+import { initPageTransition } from "../modules/pageTransition";
 
 // Shared interaction layer for every page except the home hero experience.
 export function initCommon() {
@@ -18,6 +19,7 @@ export function initCommon() {
   initCursor();
   initMagnetic();
   initMenu();
+  initPageTransition();
   initReveals();
 
   // Quick page-in fade (no heavy preloader on inner pages).

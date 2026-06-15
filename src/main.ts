@@ -11,6 +11,7 @@ import { initMarquee } from "./modules/marquee";
 import { initMenu } from "./modules/menu";
 import { renderCapabilities } from "./modules/content";
 import { initCapabilitiesShowcase } from "./modules/capabilitiesShowcase";
+import { initPageTransition } from "./modules/pageTransition";
 import { initHero } from "./gl/hero";
 
 function boot() {
@@ -28,6 +29,7 @@ function boot() {
   initMarquee();
   initMenu();
   initCapabilitiesShowcase();
+  initPageTransition();
 
   // WebGL hero (only present on the home page).
   const hero = initHero();

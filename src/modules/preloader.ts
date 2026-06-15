@@ -14,11 +14,14 @@ export function runPreloader(): Promise<void> {
       return;
     }
 
-    if (prefersReducedMotion()) {
+    // Only play the full 0–100 counter on the first visit of the session;
+    // later navigations rely on the page-transition curtain instead.
+    if (prefersReducedMotion() || sessionStorage.getItem("ph_visited")) {
       el.style.display = "none";
       resolve();
       return;
     }
+    sessionStorage.setItem("ph_visited", "1");
 
     document.documentElement.classList.add("is-loading");
 
