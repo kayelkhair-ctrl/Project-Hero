@@ -7,6 +7,7 @@ import { initSmoothScroll } from "../modules/smoothScroll";
 import { initCursor } from "../modules/cursor";
 import { initReveals } from "../modules/reveals";
 import { initMagnetic } from "../modules/magnetic";
+import { initMenu } from "../modules/menu";
 
 // Shared interaction layer for every page except the home hero experience.
 export function initCommon() {
@@ -16,6 +17,7 @@ export function initCommon() {
   initSmoothScroll();
   initCursor();
   initMagnetic();
+  initMenu();
   initReveals();
 
   // Quick page-in fade (no heavy preloader on inner pages).

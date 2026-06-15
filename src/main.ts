@@ -8,6 +8,7 @@ import { runPreloader } from "./modules/preloader";
 import { initReveals } from "./modules/reveals";
 import { initMagnetic } from "./modules/magnetic";
 import { initMarquee } from "./modules/marquee";
+import { initMenu } from "./modules/menu";
 import { renderServices, renderWork } from "./modules/content";
 import { initHero } from "./gl/hero";
 
@@ -25,6 +26,7 @@ function boot() {
   initCursor();
   initMagnetic();
   initMarquee();
+  initMenu();
 
   // WebGL hero (only present on the home page).
   const hero = initHero();

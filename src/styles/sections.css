@@ -150,6 +150,63 @@
 }
 
 /* ============================================================
+   MOBILE MENU OVERLAY
+   ============================================================ */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--ink);
+  color: var(--bg);
+  padding: clamp(1.5rem, 5vw, 3rem) var(--gutter);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+  transition: clip-path 0.7s var(--ease);
+}
+.menu-overlay.is-open {
+  clip-path: inset(0 0 0 0);
+  pointer-events: auto;
+}
+.menu-overlay__close {
+  position: absolute;
+  top: clamp(1rem, 2vw, 1.75rem);
+  right: var(--gutter);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.85rem;
+  color: var(--bg);
+}
+.menu-overlay__links {
+  display: grid;
+  gap: 0.4rem;
+}
+.menu-overlay__links a {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  display: inline-block;
+}
+.menu-overlay__links a:hover {
+  color: var(--accent);
+}
+.menu-overlay__foot {
+  position: absolute;
+  bottom: clamp(1.5rem, 4vw, 3rem);
+  left: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--fs-small);
+}
+
+/* ============================================================
    HERO
    ============================================================ */
 .hero {
