@@ -130,52 +130,65 @@ const app: Draw = (g, w, h, t) => {
   }
 };
 
-// Bespoke AI — a small neural net with pulses travelling along the edges.
+// Bespoke AI — a chat exchange typing out, with a "thinking" dot reply.
 const ai: Draw = (g, w, h, t) => {
-  const layers = [3, 4, 4, 2];
-  const cols: { x: number; y: number }[][] = [];
-  const padX = w * 0.18,
-    spanX = w - padX * 2;
-  layers.forEach((n, li) => {
-    const x = padX + (spanX * li) / (layers.length - 1);
-    const col: { x: number; y: number }[] = [];
-    for (let i = 0; i < n; i++) {
-      const y = h * 0.5 + (i - (n - 1) / 2) * (h * 0.7) / Math.max(...layers);
-      col.push({ x, y });
-    }
-    cols.push(col);
-  });
-  for (let li = 0; li < cols.length - 1; li++) {
-    cols[li].forEach((a, ai2) => {
-      cols[li + 1].forEach((b, bi) => {
-        g.strokeStyle = DIM;
-        g.lineWidth = 1;
+  const pad = w * 0.16;
+  const bw = w - pad * 2;
+  const cycle = 7;
+  const tc = t % cycle;
+
+  const userMsg = "Summarise today's orders";
+  const typed = Math.max(0, Math.min(userMsg.length, Math.floor((tc / 1.6) * userMsg.length)));
+  const userText = userMsg.slice(0, typed);
+
+  // user bubble (right)
+  g.font = `500 ${Math.round(h * 0.052)}px "Space Grotesk", sans-serif`;
+  const ubw = Math.min(bw * 0.7, g.measureText(userMsg).width + 36);
+  const uy = h * 0.26;
+  g.fillStyle = ACCENT;
+  roundRect(g, pad + bw - ubw, uy, ubw, h * 0.13, 12);
+  g.fill();
+  g.fillStyle = "#fff";
+  g.textBaseline = "middle";
+  g.fillText(userText + (typed < userMsg.length && tc < 1.7 ? "▌" : ""), pad + bw - ubw + 18, uy + h * 0.065);
+
+  // assistant bubble (left) — appears after the question
+  if (tc > 1.9) {
+    const ay = h * 0.52;
+    const reveal = Math.min(1, (tc - 1.9) / 0.4);
+    g.globalAlpha *= reveal;
+    g.strokeStyle = "rgba(243,241,236,0.5)";
+    g.lineWidth = 1.5;
+    const abw = bw * 0.62;
+    if (tc < 3.2) {
+      // thinking dots
+      roundRect(g, pad, ay, abw * 0.36, h * 0.13, 12);
+      g.stroke();
+      for (let i = 0; i < 3; i++) {
+        const b = Math.sin(t * 6 - i * 0.6) * 0.5 + 0.5;
+        g.fillStyle = `rgba(243,241,236,${0.3 + b * 0.6})`;
         g.beginPath();
-        g.moveTo(a.x, a.y);
-        g.lineTo(b.x, b.y);
-        g.stroke();
-        // pulse
-        const phase = (t * 0.8 + li * 0.33 + (ai2 + bi) * 0.07) % 1;
-        const px = a.x + (b.x - a.x) * phase;
-        const py = a.y + (b.y - a.y) * phase;
-        g.fillStyle = ACCENT;
-        g.globalAlpha *= 0.9;
-        g.beginPath();
-        g.arc(px, py, 2.2, 0, Math.PI * 2);
+        g.arc(pad + abw * 0.1 + i * abw * 0.08, ay + h * 0.065, 3, 0, Math.PI * 2);
         g.fill();
-        g.globalAlpha /= 0.9;
+      }
+    } else {
+      roundRect(g, pad, ay, abw, h * 0.22, 12);
+      g.stroke();
+      const lines = ["142 orders · £8.4k", "↑ 12% vs yesterday"];
+      g.fillStyle = LIGHT;
+      g.font = `500 ${Math.round(h * 0.046)}px "Space Grotesk", sans-serif`;
+      lines.forEach((ln, i) => {
+        const chars = Math.floor(Math.min(ln.length, (tc - 3.2) / 0.5 * ln.length - i * ln.length));
+        if (chars > 0) g.fillText(ln.slice(0, chars), pad + 16, ay + h * 0.07 + i * h * 0.08);
       });
-    });
-  }
-  cols.forEach((col, li) =>
-    col.forEach((nd, i) => {
-      const lit = (Math.sin(t * 2 + li + i) + 1) / 2;
-      g.fillStyle = li === cols.length - 1 ? ACCENT : LIGHT;
+      g.fillStyle = ACCENT;
       g.beginPath();
-      g.arc(nd.x, nd.y, 5 + lit * 2, 0, Math.PI * 2);
+      g.arc(pad + abw - 16, ay + h * 0.04, 3, 0, Math.PI * 2);
       g.fill();
-    })
-  );
+    }
+    g.globalAlpha /= reveal;
+  }
+  g.textBaseline = "alphabetic";
 };
 
 // Brand — a morphing polygon cycling through shapes.
