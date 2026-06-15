@@ -52,6 +52,10 @@ export function injectChrome(current = "") {
             <span>Bradford · United Kingdom</span>
           </div>
         </div>
+        <div class="footer__mega" aria-hidden="true">
+          <span class="footer__mark"></span>
+          <span class="footer__mega-text" data-reveal="lines"><span class="line"><span>The Project Hero</span></span></span>
+        </div>
       </footer>`;
   }
 }
