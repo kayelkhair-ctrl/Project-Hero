@@ -4,9 +4,10 @@ import { $$ } from "../lib/utils";
 // item drives a bespoke animated canvas visual that *demonstrates* itself.
 // Everything is cheap canvas-2D (no WebGL) so it stays fast everywhere.
 
-const LIGHT = "#f3f1ec";
+// Foreground inks for a LIGHT stage that blends with the site.
+const INK = "#0b0b0b";
 const ACCENT = "#2e5bff";
-const DIM = "rgba(243,241,236,0.28)";
+const DIM = "rgba(11,11,11,0.22)";
 
 type Draw = (g: CanvasRenderingContext2D, w: number, h: number, t: number) => void;
 
@@ -18,7 +19,7 @@ const web: Draw = (g, w, h, t) => {
     bh = h * 0.6,
     x = (w - bw) / 2,
     y = (h - bh) / 2;
-  g.strokeStyle = LIGHT;
+  g.strokeStyle = INK;
   g.lineWidth = 1.5;
   roundRect(g, x, y, bw, bh, 10);
   g.stroke();
@@ -49,7 +50,7 @@ const web: Draw = (g, w, h, t) => {
   blocks.forEach((b, i) => {
     const r = blockRect(b);
     const sel = i === active;
-    g.fillStyle = sel ? "rgba(46,91,255,0.55)" : "rgba(243,241,236,0.1)";
+    g.fillStyle = sel ? "rgba(46,91,255,0.55)" : "rgba(11,11,11,0.07)";
     roundRect(g, r.bx, r.by, r.bwid, r.bhei, 5);
     g.fill();
     if (sel) {
@@ -72,7 +73,7 @@ const webCursor = { x: 0, y: 0 };
 function drawPointer(g: CanvasRenderingContext2D, x: number, y: number) {
   g.save();
   g.translate(x, y);
-  g.fillStyle = LIGHT;
+  g.fillStyle = INK;
   g.beginPath();
   g.moveTo(0, 0);
   g.lineTo(0, 16);
@@ -126,7 +127,7 @@ const webgl: Draw = (g, w, h, t) => {
   ICO_E.forEach(([a, b]) => {
     const depth = (proj[a].z + proj[b].z) / 2; // -1 (near) .. 1 (far)
     g.globalAlpha = baseAlpha * (0.35 + (1 - (depth + 1.5) / 3) * 0.65);
-    g.strokeStyle = LIGHT;
+    g.strokeStyle = INK;
     g.beginPath();
     g.moveTo(proj[a].x, proj[a].y);
     g.lineTo(proj[b].x, proj[b].y);
@@ -147,12 +148,12 @@ const app: Draw = (g, w, h, t) => {
     ph = h * 0.78,
     x = (w - pw) / 2,
     y = (h - ph) / 2;
-  g.strokeStyle = LIGHT;
+  g.strokeStyle = INK;
   g.lineWidth = 1.5;
   roundRect(g, x, y, pw, ph, 16);
   g.stroke();
   // notch
-  g.fillStyle = LIGHT;
+  g.fillStyle = INK;
   roundRect(g, x + pw / 2 - 12, y + 8, 24, 5, 3);
   g.fill();
   g.save();
@@ -161,7 +162,7 @@ const app: Draw = (g, w, h, t) => {
   const scroll = (t * 30) % 44;
   for (let i = -1; i < 7; i++) {
     const yy = y + 30 + i * 44 - scroll;
-    g.fillStyle = `rgba(243,241,236,0.07)`;
+    g.fillStyle = `rgba(11,11,11,0.05)`;
     roundRect(g, x + 14, yy, pw - 28, 34, 6);
     g.fill();
     g.fillStyle = ACCENT;
@@ -211,7 +212,7 @@ const ai: Draw = (g, w, h, t) => {
     const ay = h * 0.52;
     const reveal = Math.min(1, (tc - 1.9) / 0.4);
     g.globalAlpha *= reveal;
-    g.strokeStyle = "rgba(243,241,236,0.5)";
+    g.strokeStyle = "rgba(11,11,11,0.35)";
     g.lineWidth = 1.5;
     const abw = bw * 0.62;
     if (tc < 3.2) {
@@ -220,7 +221,7 @@ const ai: Draw = (g, w, h, t) => {
       g.stroke();
       for (let i = 0; i < 3; i++) {
         const b = Math.sin(t * 6 - i * 0.6) * 0.5 + 0.5;
-        g.fillStyle = `rgba(243,241,236,${0.3 + b * 0.6})`;
+        g.fillStyle = `rgba(11,11,11,${0.3 + b * 0.6})`;
         g.beginPath();
         g.arc(pad + abw * 0.1 + i * abw * 0.08, ay + h * 0.065, 3, 0, Math.PI * 2);
         g.fill();
@@ -229,7 +230,7 @@ const ai: Draw = (g, w, h, t) => {
       roundRect(g, pad, ay, abw, h * 0.22, 12);
       g.stroke();
       const lines = ["142 orders · £8.4k", "↑ 12% vs yesterday"];
-      g.fillStyle = LIGHT;
+      g.fillStyle = INK;
       g.font = `500 ${Math.round(h * 0.046)}px "Space Grotesk", sans-serif`;
       lines.forEach((ln, i) => {
         const chars = Math.floor(Math.min(ln.length, (tc - 3.2) / 0.5 * ln.length - i * ln.length));
@@ -257,7 +258,7 @@ const brand: Draw = (g, w, h, t) => {
   const k = ease(seg % 1);
   const N = 64;
   g.lineWidth = 1.5;
-  g.strokeStyle = LIGHT;
+  g.strokeStyle = INK;
   g.beginPath();
   for (let i = 0; i <= N; i++) {
     const a = (i / N) * Math.PI * 2 - Math.PI / 2;
@@ -275,47 +276,77 @@ const brand: Draw = (g, w, h, t) => {
   g.fill();
 };
 
-// Motion — an easing curve with a dot riding it.
-const motion: Draw = (g, w, h, t) => {
-  const x0 = w * 0.2,
-    x1 = w * 0.8,
-    y0 = h * 0.72,
-    y1 = h * 0.28;
+// SEO & GEO — a search bar with results, the brand climbing to #1, plus a
+// rising growth bar chart.
+const seo: Draw = (g, w, h, t) => {
+  const pad = w * 0.14;
+  const bw = w - pad * 2;
+  // search bar
+  const sy = h * 0.16;
   g.strokeStyle = DIM;
-  g.lineWidth = 1;
-  g.beginPath();
-  g.moveTo(x0, y0);
-  g.lineTo(x0, y1);
-  g.moveTo(x0, y0);
-  g.lineTo(x1, y0);
+  g.lineWidth = 1.5;
+  roundRect(g, pad, sy, bw, h * 0.12, h * 0.06);
   g.stroke();
+  g.strokeStyle = INK;
+  g.lineWidth = 2;
+  const mr = h * 0.03;
+  g.beginPath();
+  g.arc(pad + h * 0.06, sy + h * 0.06, mr, 0, Math.PI * 2);
+  g.stroke();
+  g.beginPath();
+  g.moveTo(pad + h * 0.06 + mr * 0.7, sy + h * 0.06 + mr * 0.7);
+  g.lineTo(pad + h * 0.06 + mr * 1.6, sy + h * 0.06 + mr * 1.6);
+  g.stroke();
+
+  // results — the brand row climbs to the top over time
+  const rows = 3;
+  const climb = (Math.sin(t * 0.7) * 0.5 + 0.5); // 0..1
+  const brandRow = Math.round((1 - climb) * (rows - 1));
+  for (let i = 0; i < rows; i++) {
+    const ry = h * 0.36 + i * h * 0.12;
+    const isBrand = i === brandRow;
+    g.fillStyle = isBrand ? "rgba(46,91,255,0.16)" : "rgba(11,11,11,0.04)";
+    roundRect(g, pad, ry, bw * 0.62, h * 0.09, 5);
+    g.fill();
+    if (isBrand) {
+      g.strokeStyle = ACCENT;
+      g.lineWidth = 1.5;
+      g.stroke();
+    }
+    g.fillStyle = isBrand ? ACCENT : DIM;
+    roundRect(g, pad + 12, ry + h * 0.025, bw * (isBrand ? 0.34 : 0.26), 5, 2);
+    g.fill();
+  }
+
+  // growth bars (right)
+  const bx = pad + bw * 0.7;
+  const bWidth = bw * 0.3;
+  const n = 5;
+  const baseY = h * 0.78;
+  for (let i = 0; i < n; i++) {
+    const grow = Math.min(1, Math.max(0, t * 0.6 - i * 0.25)) % 3;
+    const gg = Math.min(1, Math.max(0, t * 0.5 - i * 0.2));
+    const bh2 = (0.2 + (i / (n - 1)) * 0.8) * h * 0.34 * gg;
+    g.fillStyle = i === n - 1 ? ACCENT : DIM;
+    const cw = bWidth / n - 4;
+    roundRect(g, bx + i * (bWidth / n), baseY - bh2, cw, bh2, 2);
+    g.fill();
+  }
+  // trend arrow
   g.strokeStyle = ACCENT;
   g.lineWidth = 2;
   g.beginPath();
-  for (let i = 0; i <= 60; i++) {
-    const p = i / 60;
-    const e = ease(p);
-    const x = x0 + (x1 - x0) * p;
-    const y = y0 + (y1 - y0) * e;
-    i === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
-  }
+  g.moveTo(bx, baseY - h * 0.06);
+  g.lineTo(bx + bWidth, baseY - h * 0.34);
   g.stroke();
-  const p = (t * 0.4) % 1;
-  const e = ease(p);
-  const dx = x0 + (x1 - x0) * p;
-  const dy = y0 + (y1 - y0) * e;
-  g.fillStyle = LIGHT;
   g.beginPath();
-  g.arc(dx, dy, 6, 0, Math.PI * 2);
-  g.fill();
-  // bouncing ball driven by same easing
-  g.fillStyle = ACCENT;
-  g.beginPath();
-  g.arc(w * 0.5, y0 - (y0 - y1) * e, 7, 0, Math.PI * 2);
-  g.fill();
+  g.moveTo(bx + bWidth - 8, baseY - h * 0.34);
+  g.lineTo(bx + bWidth, baseY - h * 0.34);
+  g.lineTo(bx + bWidth, baseY - h * 0.34 + 8);
+  g.stroke();
 };
 
-const RENDERERS: Record<string, Draw> = { web, webgl, app, ai, brand, motion };
+const RENDERERS: Record<string, Draw> = { web, webgl, app, ai, brand, seo };
 
 /* ---------- helpers ---------- */
 function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -347,6 +378,7 @@ export function initCapabilitiesShowcase() {
   if (!g) return;
 
   const keys = items.map((el) => (el as HTMLElement).dataset.key || "web");
+  const readout = document.getElementById("caps-readout");
   let current = 0;
   let previous = 0;
   let mixStart = -1;
@@ -358,6 +390,14 @@ export function initCapabilitiesShowcase() {
     previous = current;
     current = i;
     mixStart = performance.now();
+    if (readout) {
+      const desc = (items[i] as HTMLElement).dataset.desc ?? "";
+      readout.style.opacity = "0";
+      setTimeout(() => {
+        readout.textContent = desc;
+        readout.style.opacity = "1";
+      }, 180);
+    }
   };
 
   items.forEach((el, i) => {

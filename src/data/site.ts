@@ -50,9 +50,9 @@ export const capabilities: Capability[] = [
   },
   {
     num: "06",
-    key: "motion",
-    name: "Motion & Animation",
-    desc: "Scroll-driven storytelling and micro-interaction that give an interface life.",
+    key: "seo",
+    name: "SEO & GEO",
+    desc: "Get found — on Google and in AI search. We optimise for traditional rankings and for generative engines (ChatGPT, Gemini, Perplexity) to drive real growth.",
   },
 ];
 

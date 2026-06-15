@@ -152,7 +152,7 @@ export function initHero() {
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(42, 1, 0.1, 100);
-  camera.position.z = 4.4;
+  camera.position.z = 5.0;
 
   const renderer = new WebGLRenderer({
     canvas,
@@ -197,11 +197,11 @@ export function initHero() {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const wide = w > 900;
-    // On phones, tuck the blob lower-right and shrink it so the headline and
-    // nav stay clean; on desktop it sits to the right of the copy.
-    mesh.position.x = wide ? 1.15 : 0.6;
-    mesh.position.y = wide ? 0.1 : -0.85;
-    baseScale = wide ? 1 : 0.72;
+    // Keep the whole blob in frame (it was clipping at the top); tuck it
+    // lower-right on phones so the headline and nav stay clean.
+    mesh.position.x = wide ? 1.2 : 0.5;
+    mesh.position.y = wide ? -0.2 : -0.7;
+    baseScale = wide ? 0.95 : 0.78;
     camera.updateProjectionMatrix();
   }
   resize();

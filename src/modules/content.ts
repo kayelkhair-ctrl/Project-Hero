@@ -29,15 +29,18 @@ export function renderCapabilities() {
   list.innerHTML = capabilities
     .map(
       (c, i) => `
-      <li class="cap${i === 0 ? " is-active" : ""}" data-key="${c.key}" data-index="${i}">
+      <li class="cap${i === 0 ? " is-active" : ""}" data-key="${c.key}" data-index="${i}" data-desc="${c.desc}">
         <button class="cap__btn" type="button" data-cursor="">
           <span class="cap__num">${c.num}</span>
           <span class="cap__name">${c.name}</span>
         </button>
-        <p class="cap__desc">${c.desc}</p>
       </li>`
     )
     .join("");
+
+  // Seed the readout with the first capability's description.
+  const readout = document.getElementById("caps-readout");
+  if (readout) readout.textContent = capabilities[0]?.desc ?? "";
 }
 
 export function renderWork(targetId = "work-grid") {
