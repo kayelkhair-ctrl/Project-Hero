@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Project Hero — Immersive Digital Studio</title>
+    <meta
+      name="description"
+      content="The Project Hero is a creative digital studio building immersive 3D websites and digital experiences for ambitious brands."
+    />
+    <meta name="theme-color" content="#f3f1ec" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Project Hero — Immersive Digital Studio" />
+    <meta
+      property="og:description"
+      content="We build immersive 3D websites and digital experiences for ambitious brands."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://theprojecthero.co.uk/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <div class="preloader__count" id="preloaderCount">0</div>
+      <div class="preloader__word">The Project Hero — Digital Studio</div>
+    </div>
+
+    <!-- Custom cursor -->
+    <div class="cursor" id="cursor"><span class="cursor__label" id="cursorLabel"></span></div>
+
+    <!-- Grain -->
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Nav -->
+    <header class="nav">
+      <a href="/" class="nav__brand"><span class="dot"></span>The Project Hero</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="/work/" data-cursor="View">Work</a>
+        <a href="/studio/" data-cursor="About">Studio</a>
+        <a href="/insights/" data-cursor="Read">Insights</a>
+        <a href="/contact/" data-cursor="Say hi">Contact</a>
+      </nav>
+      <button class="nav__toggle" aria-label="Open menu">Menu</button>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <canvas class="hero__canvas" id="gl"></canvas>
+        <div class="hero__inner wrap">
+          <p class="eyebrow" data-reveal="fade">Creative Digital Studio · Est. Bradford, UK</p>
+          <h1 class="hero__title" data-reveal="lines">
+            <span class="line"><span>We build immersive</span></span>
+            <span class="line"><span>websites &amp; digital</span></span>
+            <span class="line"><span>experiences.</span></span>
+          </h1>
+          <div class="hero__meta">
+            <p class="hero__lead" data-reveal="fade">
+              A studio where craft and narrative become one — 3D, WebGL and
+              motion for brands that refuse to blend in.
+            </p>
+            <span class="hero__scroll">Scroll <span class="arrow">↓</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATEMENT -->
+      <section class="section wrap">
+        <p class="eyebrow" data-reveal="fade">What we do</p>
+        <h2 class="statement" data-reveal="words" style="margin-top: 1.5rem">
+          We design and engineer <span class="accent">immersive</span> digital
+          experiences that move people — and move metrics.
+        </h2>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="section wrap" id="services">
+        <div class="section-head">
+          <h2 data-reveal="words">Capabilities</h2>
+          <p class="eyebrow" data-reveal="fade">01 — 08</p>
+        </div>
+        <ul class="services__list" id="services-list">
+          <!-- injected by JS -->
+        </ul>
+      </section>
+
+      <!-- WORK -->
+      <section class="section wrap" id="work">
+        <div class="section-head">
+          <h2 data-reveal="words">Selected Work</h2>
+          <a href="/work/" class="eyebrow" data-cursor="View all">All projects →</a>
+        </div>
+        <div class="work__grid" id="work-grid">
+          <!-- injected by JS -->
+        </div>
+      </section>
+
+      <!-- MARQUEE -->
+      <section class="marquee" aria-hidden="true">
+        <div class="marquee__track" id="marquee">
+          <span class="marquee__item">
+            3D &amp; WebGL <span class="star">✦</span> Brand <span class="star">✦</span>
+            Motion <span class="star">✦</span> Web Design <span class="star">✦</span>
+            Development <span class="star">✦</span> Strategy <span class="star">✦</span>
+          </span>
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="section wrap" id="studio">
+        <div class="section-head">
+          <h2 data-reveal="words">Our Story</h2>
+          <p class="eyebrow" data-reveal="fade">The studio</p>
+        </div>
+        <div style="max-width: 60ch">
+          <p class="hero__lead" data-reveal="fade" style="margin-bottom: 1.5rem">
+            The Project Hero began with a simple belief: every ambitious brand
+            deserves a website that feels like an experience, not a brochure.
+          </p>
+          <p data-reveal="fade" style="color: var(--muted)">
+            We're a small, senior team of designers and engineers who care about
+            the details most people never notice — the weight of a transition,
+            the physics of a scroll, the way light moves across a surface. We
+            build, ship and look after the work long after launch.
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section wrap">
+        <div class="cta">
+          <p class="eyebrow" data-reveal="fade">Have a project in mind?</p>
+          <h2 class="cta__title" data-reveal="words">
+            Let's make something <em>unforgettable</em>.
+          </h2>
+          <a href="/contact/" class="btn" data-magnetic data-cursor="Let's talk">
+            Start a project →
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer__top">
+          <div>
+            <p class="footer__big">Let's build something worth remembering.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Menu</h4>
+            <ul>
+              <li><a href="/work/" data-cursor="View">Work</a></li>
+              <li><a href="/studio/" data-cursor="About">Studio</a></li>
+              <li><a href="/insights/" data-cursor="Read">Insights</a></li>
+              <li><a href="/contact/" data-cursor="Say hi">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer__col">
+            <h4>Get in touch</h4>
+            <ul>
+              <li><a href="mailto:info@theprojecthero.co.uk">info@theprojecthero.co.uk</a></li>
+              <li><a href="tel:+441274505805">01274 505805</a></li>
+              <li>Euroway House, Roydsdale Way,<br />Bradford BD4 6SE</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© <span id="year"></span> The Project Hero. All rights reserved.</span>
+          <span>Bradford · United Kingdom</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

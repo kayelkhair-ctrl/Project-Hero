@@ -1,0 +1,42 @@
+:root {
+  /* ---- Color: light / minimal ---- */
+  --bg: #f3f1ec;          /* warm off-white */
+  --bg-2: #ebe8e1;        /* slightly deeper panel */
+  --ink: #0b0b0b;         /* near-black text */
+  --ink-2: #1a1a1a;
+  --muted: #6b6862;       /* secondary text */
+  --line: #d9d5cc;        /* hairline borders */
+  --accent: #2e5bff;      /* electric blue accent */
+  --accent-ink: #ffffff;
+
+  /* ---- Type ---- */
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* fluid type scale (clamp: min, vw, max) */
+  --fs-hero: clamp(2.75rem, 9vw, 9.5rem);
+  --fs-h1: clamp(2.25rem, 6vw, 6rem);
+  --fs-h2: clamp(1.75rem, 4vw, 3.5rem);
+  --fs-h3: clamp(1.25rem, 2vw, 1.75rem);
+  --fs-lead: clamp(1.25rem, 2.2vw, 2.25rem);
+  --fs-body: clamp(1rem, 1.05vw, 1.125rem);
+  --fs-small: 0.8125rem;
+
+  /* ---- Layout ---- */
+  --maxw: 1600px;
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --section-y: clamp(5rem, 12vw, 12rem);
+  --radius: 14px;
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur: 0.8s;
+
+  /* ---- Z ---- */
+  --z-canvas: 1;
+  --z-content: 2;
+  --z-nav: 50;
+  --z-cursor: 9998;
+  --z-preloader: 9999;
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact — The Project Hero</title>
+    <meta name="description" content="Start a project with The Project Hero. Tell us about your brand and what you want to build." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="/src/pages/contact.ts"></script>
+  </head>
+  <body>
+    <div class="cursor" id="cursor"><span class="cursor__label" id="cursorLabel"></span></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div id="site-nav"></div>
+
+    <header class="page-header wrap">
+      <span class="eyebrow" data-reveal="fade">Contact</span>
+      <h1 class="page-title" data-reveal="words">Tell us what you want to build.</h1>
+      <p class="page-intro" data-reveal="fade">
+        Whether it's a full immersive site or a single bold idea, we'd love to
+        hear about it. Drop us a line and we'll get back within one working day.
+      </p>
+    </header>
+
+    <section class="section wrap">
+      <div class="contact-grid">
+        <form class="form" id="contact-form" data-reveal="fade" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="company">Company / brand</label>
+            <input type="text" id="company" name="company" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label>Budget</label>
+            <div class="budget-tiers">
+              <label><input type="radio" name="budget" value="<5k" /><span>Under £5k</span></label>
+              <label><input type="radio" name="budget" value="5-15k" /><span>£5k – £15k</span></label>
+              <label><input type="radio" name="budget" value="15-40k" /><span>£15k – £40k</span></label>
+              <label><input type="radio" name="budget" value="40k+" /><span>£40k+</span></label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">About the project</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <div>
+            <button type="submit" class="btn" data-magnetic data-cursor="Send">Send enquiry →</button>
+            <p class="form__note" id="form-note" style="margin-top: 1rem"></p>
+          </div>
+        </form>
+
+        <aside class="contact-aside" data-reveal="fade">
+          <h3>Or reach us directly</h3>
+          <ul>
+            <li><a href="mailto:info@theprojecthero.co.uk">info@theprojecthero.co.uk</a></li>
+            <li><a href="tel:+441274505805">01274 505805</a></li>
+            <li>Euroway House, Roydsdale Way,<br />Bradford BD4 6SE</li>
+            <li>Mon – Fri · 9am – 5:30pm GMT</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://theprojecthero.co.uk/sitemap.xml

@@ -1,0 +1,5 @@
+# Cloudflare Pages: serve directory-style routes and a 404 fallback.
+/work    /work/index.html    200
+/studio  /studio/index.html  200
+/insights /insights/index.html 200
+/contact /contact/index.html 200
