@@ -5,21 +5,25 @@ import {
   IcosahedronGeometry,
   ShaderMaterial,
   Mesh,
-  Color,
   Vector2,
   Clock,
+  Color,
 } from "three";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { lerp, prefersReducedMotion, isTouch } from "../lib/utils";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const vertex = /* glsl */ `
   uniform float uTime;
   uniform float uDistort;
+  uniform float uScroll;
   uniform vec2  uMouse;
-  varying float vDisplace;
   varying vec3  vNormal;
-  varying vec3  vViewPos;
+  varying vec3  vView;
+  varying float vD;
 
-  // --- Simplex noise (Ashima Arts, MIT) ---
   vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
   vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
   float snoise(vec3 v){
@@ -31,7 +35,7 @@ const vertex = /* glsl */ `
     vec3 l = 1.0 - g;
     vec3 i1 = min(g.xyz, l.zxy);
     vec3 i2 = max(g.xyz, l.zxy);
-    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+    vec3 x1 = x0 - i1 + C.xxx;
     vec3 x2 = x0 - i2 + 2.0 * C.xxx;
     vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
     i = mod(i, 289.0);
@@ -64,39 +68,80 @@ const vertex = /* glsl */ `
     m = m * m;
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
   }
+  float fbm(vec3 p){
+    float v = 0.0, a = 0.5;
+    for(int i=0;i<2;i++){ v += a*snoise(p); p *= 2.0; a *= 0.5; }
+    return v;
+  }
+  // Single-sample organic displacement (cheap enough for software WebGL and
+  // low-end GPUs). Surface bumps are recovered in the fragment via derivatives.
+  float disp(vec3 pos){
+    float t = uTime * 0.22;
+    float warp = snoise(pos*0.85 + t);
+    return fbm(pos*1.1 + warp*0.6 + t);
+  }
 
   void main(){
-    vec3 pos = position;
-    float t = uTime * 0.35;
-    float mouseInfluence = 0.4 + length(uMouse) * 0.6;
-    float n = snoise(pos * 1.1 + vec3(t, t * 0.6, t * 0.2));
-    float n2 = snoise(pos * 2.4 - vec3(t * 0.8));
-    float displace = (n * 0.6 + n2 * 0.25) * uDistort * mouseInfluence;
-    vDisplace = displace;
-    pos += normal * displace;
+    float d = disp(position);
+    float amt = uDistort * (0.55 + 0.45*length(uMouse)) + uScroll*0.35;
+    vec3 pd = position + normalize(position) * d * amt;
 
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    vViewPos = -mvPosition.xyz;
+    vD = d;
+    vec4 mv = modelViewMatrix * vec4(pd, 1.0);
+    vView = -mv.xyz;
     vNormal = normalize(normalMatrix * normal);
-    gl_Position = projectionMatrix * mvPosition;
+    gl_Position = projectionMatrix * mv;
   }
 `;
 
+// Cheap-but-premium look: a faked studio environment (vertical softbox
+// gradient) sampled by the reflected view vector, a crisp specular, an
+// iridescent fresnel rim and a touch of colour from displacement.
 const fragment = /* glsl */ `
-  uniform vec3 uColorA;
-  uniform vec3 uColorB;
-  uniform vec3 uColorBg;
-  varying float vDisplace;
-  varying vec3  vNormal;
-  varying vec3  vViewPos;
+  precision highp float;
+  uniform vec3 uAccent;
+  uniform float uTime;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying float vD;
+
+  vec3 palette(float t){
+    // smooth iridescent ramp
+    return 0.55 + 0.45*cos(6.2831*(vec3(0.0,0.33,0.67)+t));
+  }
 
   void main(){
-    vec3 viewDir = normalize(vViewPos);
-    float fresnel = pow(1.0 - max(dot(viewDir, normalize(vNormal)), 0.0), 2.2);
-    float d = smoothstep(-0.4, 0.6, vDisplace);
-    vec3 base = mix(uColorA, uColorB, d);
-    // Lift edges toward background for an airy, light-theme feel.
-    vec3 col = mix(base, uColorBg, fresnel * 0.55);
+    vec3 V = normalize(vView);
+
+    // Cheap surface bump: perturb the normal by the screen-space gradient of
+    // the displacement so the chrome reflections ripple without vertex cost.
+    vec3 N = normalize(vNormal);
+    vec3 dPdx = dFdx(vView);
+    vec3 dPdy = dFdy(vView);
+    float dHx = dFdx(vD);
+    float dHy = dFdy(vD);
+    vec3 bump = (dHx * cross(N, dPdy) + dHy * cross(dPdx, N));
+    N = normalize(N - bump * 6.0);
+
+    vec3 R = reflect(-V, N);
+
+    // Faked softbox environment: bright top, mid sides, dim bottom.
+    float up = R.y*0.5 + 0.5;
+    vec3 env = mix(vec3(0.62), vec3(1.0), smoothstep(0.35,0.95,up));
+    env = mix(env, vec3(0.50,0.54,0.62), smoothstep(0.35,0.0,up));
+
+    // Specular hotspot from a key light.
+    vec3 L = normalize(vec3(0.5, 0.8, 0.7));
+    float spec = pow(max(dot(R, L), 0.0), 48.0);
+
+    float fres = pow(1.0 - max(dot(N, V), 0.0), 2.5);
+    vec3 irid = palette(fres*0.8 + vD*0.6 + uTime*0.02);
+
+    vec3 col = env;                          // base chrome reflection
+    col = mix(col, irid, fres*0.55);         // iridescent rim
+    col += spec * 1.2;                        // highlight
+    col = mix(col, uAccent, fres*0.18);      // brand tint in the grazing angles
+
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -105,14 +150,9 @@ export function initHero() {
   const canvas = document.getElementById("gl") as HTMLCanvasElement | null;
   if (!canvas) return;
 
-  const css = getComputedStyle(document.documentElement);
-  const accent = new Color(css.getPropertyValue("--accent").trim() || "#2e5bff");
-  const bg = new Color(css.getPropertyValue("--bg").trim() || "#f3f1ec");
-  const colorA = new Color("#1b2a6b");
-
   const scene = new Scene();
-  const camera = new PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.z = 4.2;
+  const camera = new PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.z = 4.4;
 
   const renderer = new WebGLRenderer({
     canvas,
@@ -122,20 +162,23 @@ export function initHero() {
   });
   renderer.setClearColor(0x000000, 0);
 
-  // Mobile gets lower geometry detail for performance.
-  const detail = isTouch() ? 32 : 64;
-  const geometry = new IcosahedronGeometry(1.25, detail);
+  const detail = isTouch() ? 24 : 48;
+  const geometry = new IcosahedronGeometry(1.3, detail);
+
+  const uTime = { value: 0 };
+  const uDistort = { value: 0 };
+  const uMouse = { value: new Vector2(0, 0) };
+  const uScroll = { value: 0 };
 
   const material = new ShaderMaterial({
     vertexShader: vertex,
     fragmentShader: fragment,
     uniforms: {
-      uTime: { value: 0 },
-      uDistort: { value: 0.0 }, // animates in after preloader
-      uMouse: { value: new Vector2(0, 0) },
-      uColorA: { value: colorA },
-      uColorB: { value: accent },
-      uColorBg: { value: bg },
+      uTime,
+      uDistort,
+      uMouse,
+      uScroll,
+      uAccent: { value: new Color("#2e5bff") },
     },
   });
 
@@ -152,8 +195,8 @@ export function initHero() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // Pull the object toward the right on wide screens for editorial balance.
-    mesh.position.x = w > 900 ? 1.1 : 0;
+    mesh.position.x = w > 900 ? 1.15 : 0;
+    mesh.position.y = w > 900 ? 0.1 : 0.35;
     camera.updateProjectionMatrix();
   }
   resize();
@@ -168,35 +211,42 @@ export function initHero() {
 
   const reduced = prefersReducedMotion();
   const clock = new Clock();
+  let scrollProgress = 0;
+
+  ScrollTrigger.create({
+    trigger: "#hero",
+    start: "top top",
+    end: "bottom top",
+    scrub: true,
+    onUpdate: (self) => {
+      scrollProgress = self.progress;
+    },
+  });
 
   function frame() {
     const t = clock.getElapsedTime();
-    mouse.x = lerp(mouse.x, mouseTarget.x, 0.06);
-    mouse.y = lerp(mouse.y, mouseTarget.y, 0.06);
+    mouse.x = lerp(mouse.x, mouseTarget.x, 0.05);
+    mouse.y = lerp(mouse.y, mouseTarget.y, 0.05);
 
-    material.uniforms.uTime.value = reduced ? 0 : t;
-    material.uniforms.uMouse.value.set(mouse.x, mouse.y);
+    uTime.value = reduced ? 0 : t;
+    uMouse.value.set(mouse.x, mouse.y);
+    uScroll.value = scrollProgress;
 
-    mesh.rotation.y = mouse.x * 0.4 + (reduced ? 0 : t * 0.05);
-    mesh.rotation.x = mouse.y * 0.3;
+    mesh.scale.setScalar(1 + scrollProgress * 0.3);
+    mesh.rotation.y = mouse.x * 0.5 + (reduced ? 0 : t * 0.08) + scrollProgress * 1.2;
+    mesh.rotation.x = mouse.y * 0.35 + scrollProgress * 0.5;
 
     renderer.render(scene, camera);
   }
   renderer.setAnimationLoop(frame);
 
-  // Public hook: animate the distortion in once the page is ready.
   return {
     reveal() {
-      const target = reduced ? 0.18 : 0.45;
-      const start = performance.now();
-      const dur = 1600;
-      const tick = (now: number) => {
-        const p = Math.min((now - start) / dur, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        material.uniforms.uDistort.value = target * eased;
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
+      gsap.to(uDistort, {
+        value: reduced ? 0.2 : 0.5,
+        duration: 1.8,
+        ease: "power3.out",
+      });
     },
   };
 }
