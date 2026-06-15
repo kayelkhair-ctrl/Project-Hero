@@ -9,8 +9,8 @@ import { initReveals } from "./modules/reveals";
 import { initMagnetic } from "./modules/magnetic";
 import { initMarquee } from "./modules/marquee";
 import { initMenu } from "./modules/menu";
-import { renderServices, renderWorkPanels } from "./modules/content";
-import { initHorizontalGallery } from "./modules/horizontalGallery";
+import { renderCapabilities } from "./modules/content";
+import { initCapabilitiesShowcase } from "./modules/capabilitiesShowcase";
 import { initHero } from "./gl/hero";
 
 function boot() {
@@ -19,8 +19,7 @@ function boot() {
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
   // Inject dynamic content first so reveals can measure it.
-  renderServices();
-  renderWorkPanels();
+  renderCapabilities();
 
   // Interaction layer.
   initSmoothScroll();
@@ -28,7 +27,7 @@ function boot() {
   initMagnetic();
   initMarquee();
   initMenu();
-  initHorizontalGallery();
+  initCapabilitiesShowcase();
 
   // WebGL hero (only present on the home page).
   const hero = initHero();

@@ -1,7 +1,7 @@
 // Shared nav + footer markup injected on inner pages so there's a single
 // source of truth. `current` highlights the active nav item.
 const NAV_LINKS = [
-  { href: "/work/", label: "Work", cursor: "View" },
+  { href: "/#capabilities", label: "What we do", cursor: "See" },
   { href: "/studio/", label: "Studio", cursor: "About" },
   { href: "/insights/", label: "Insights", cursor: "Read" },
   { href: "/contact/", label: "Contact", cursor: "Say hi" },

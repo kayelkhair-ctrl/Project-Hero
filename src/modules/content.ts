@@ -1,4 +1,4 @@
-import { services, projects } from "../data/site";
+import { capabilities, projects } from "../data/site";
 
 // Builds an inline SVG gradient placeholder so we have polished "work"
 // imagery before real case-study assets exist.
@@ -23,16 +23,18 @@ function placeholderArt(title: string, c1: string, c2: string): string {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-export function renderServices() {
-  const list = document.getElementById("services-list");
+export function renderCapabilities() {
+  const list = document.getElementById("caps-list");
   if (!list) return;
-  list.innerHTML = services
+  list.innerHTML = capabilities
     .map(
-      (s) => `
-      <li class="service" data-cursor="">
-        <span class="service__num">${s.num}</span>
-        <span class="service__name">${s.name}</span>
-        <span class="service__desc">${s.desc}</span>
+      (c, i) => `
+      <li class="cap${i === 0 ? " is-active" : ""}" data-key="${c.key}" data-index="${i}">
+        <button class="cap__btn" type="button" data-cursor="">
+          <span class="cap__num">${c.num}</span>
+          <span class="cap__name">${c.name}</span>
+        </button>
+        <p class="cap__desc">${c.desc}</p>
       </li>`
     )
     .join("");

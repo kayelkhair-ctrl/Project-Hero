@@ -1,9 +1,10 @@
 // Central content source so copy/work can be edited in one place.
 
-export interface Service {
+export interface Capability {
   num: string;
   name: string;
   desc: string;
+  key: string; // selects the animated visual in the showcase
 }
 
 export interface Project {
@@ -16,15 +17,43 @@ export interface Project {
   c2: string;
 }
 
-export const services: Service[] = [
-  { num: "01", name: "3D & WebGL", desc: "Real-time interactive 3D, shaders and immersive scenes." },
-  { num: "02", name: "Web Design", desc: "Editorial, brand-led interfaces with serious craft." },
-  { num: "03", name: "Brand & Identity", desc: "Visual systems that scale from logo to launch." },
-  { num: "04", name: "Motion & Animation", desc: "Scroll-driven storytelling and micro-interaction." },
-  { num: "05", name: "Development", desc: "Fast, accessible, hand-built front-end engineering." },
-  { num: "06", name: "Hosting & Care", desc: "We host, monitor and maintain — no surprises." },
-  { num: "07", name: "Strategy", desc: "Positioning and narrative that earns attention." },
-  { num: "08", name: "SEO & Growth", desc: "Built to be found, built to convert." },
+export const capabilities: Capability[] = [
+  {
+    num: "01",
+    key: "web",
+    name: "Web Design & Experience",
+    desc: "Editorial, immersive websites with serious craft — designed and engineered in-house.",
+  },
+  {
+    num: "02",
+    key: "webgl",
+    name: "3D & WebGL",
+    desc: "Real-time interactive 3D, shaders and scroll-driven scenes that make brands unforgettable.",
+  },
+  {
+    num: "03",
+    key: "app",
+    name: "App Development",
+    desc: "Fast, reliable web and mobile apps — from first prototype to a product people love using.",
+  },
+  {
+    num: "04",
+    key: "ai",
+    name: "Bespoke AI Apps",
+    desc: "Custom AI tools built around your business — assistants, automation and smart features that actually move the needle.",
+  },
+  {
+    num: "05",
+    key: "brand",
+    name: "Brand & Identity",
+    desc: "Visual systems that scale from logo to launch and hold together everywhere.",
+  },
+  {
+    num: "06",
+    key: "motion",
+    name: "Motion & Animation",
+    desc: "Scroll-driven storytelling and micro-interaction that give an interface life.",
+  },
 ];
 
 export const projects: Project[] = [

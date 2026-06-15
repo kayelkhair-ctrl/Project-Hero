@@ -408,6 +408,115 @@
 }
 
 /* ============================================================
+   CAPABILITIES SHOWCASE
+   ============================================================ */
+.caps {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.caps__stage {
+  position: sticky;
+  top: 14vh;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  background: radial-gradient(120% 120% at 30% 20%, #15151a 0%, #0b0b0b 70%);
+  overflow: hidden;
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.5);
+}
+.caps__stage::after {
+  /* faint frame */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+.caps__stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.caps__list {
+  display: grid;
+}
+.cap {
+  border-top: 1px solid var(--line);
+  padding: clamp(0.9rem, 2vw, 1.4rem) 0;
+}
+.cap:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.cap__btn {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  width: 100%;
+  text-align: left;
+}
+.cap__num {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+.cap__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--muted);
+  transition: color 0.4s var(--ease), transform 0.5s var(--ease);
+}
+.cap.is-active .cap__name {
+  color: var(--ink);
+  transform: translateX(0.5rem);
+}
+.cap.is-active .cap__num {
+  color: var(--accent);
+}
+.cap__desc {
+  color: var(--muted);
+  max-width: 46ch;
+  font-size: var(--fs-body);
+  margin-top: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s var(--ease), opacity 0.4s var(--ease),
+    margin-top 0.5s var(--ease);
+}
+.cap.is-active .cap__desc {
+  max-height: 6rem;
+  opacity: 1;
+  margin-top: 0.8rem;
+}
+.caps__also {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  color: var(--muted);
+  font-size: var(--fs-small);
+  letter-spacing: 0.02em;
+}
+@media (max-width: 900px) {
+  .caps {
+    grid-template-columns: 1fr;
+  }
+  .caps__stage {
+    position: relative;
+    top: 0;
+    order: -1;
+  }
+  /* On touch, show every description (no hover to reveal). */
+  .cap__desc {
+    max-height: 6rem;
+    opacity: 1;
+    margin-top: 0.8rem;
+  }
+}
+
+/* ============================================================
    HORIZONTAL WORK GALLERY
    ============================================================ */
 .work-h {

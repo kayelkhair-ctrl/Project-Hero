@@ -46,7 +46,7 @@
     <header class="nav">
       <a href="/" class="nav__brand"><span class="dot"></span>The Project Hero</a>
       <nav class="nav__links" aria-label="Primary">
-        <a href="/work/" data-cursor="View">Work</a>
+        <a href="/#capabilities" data-cursor="See">What we do</a>
         <a href="/studio/" data-cursor="About">Studio</a>
         <a href="/insights/" data-cursor="Read">Insights</a>
         <a href="/contact/" data-cursor="Say hi">Contact</a>
@@ -84,37 +84,32 @@
         </h2>
       </section>
 
-      <!-- SERVICES -->
-      <section class="section wrap" id="services">
+      <!-- CAPABILITIES SHOWCASE -->
+      <section class="section wrap" id="capabilities">
         <div class="section-head">
-          <h2 data-reveal="words">Capabilities</h2>
-          <p class="eyebrow" data-reveal="fade">01 — 08</p>
+          <h2 data-reveal="words">What we do</h2>
+          <p class="eyebrow" data-reveal="fade">Capabilities</p>
         </div>
-        <ul class="services__list" id="services-list">
-          <!-- injected by JS -->
-        </ul>
-      </section>
-
-      <!-- WORK (horizontal pinned gallery) -->
-      <section class="work-h" id="work">
-        <div class="work-h__head wrap">
-          <h2 data-reveal="words">Selected Work</h2>
-          <a href="/work/" class="eyebrow" data-cursor="View all">All projects →</a>
-        </div>
-        <div class="work-h__viewport">
-          <div class="work-h__track" id="work-h-track">
-            <!-- injected by JS -->
+        <div class="caps">
+          <div class="caps__stage" aria-hidden="true">
+            <canvas id="caps-canvas"></canvas>
           </div>
+          <ul class="caps__list" id="caps-list">
+            <!-- injected by JS -->
+          </ul>
         </div>
+        <p class="caps__also" data-reveal="fade">
+          Also: Hosting &amp; care · SEO &amp; growth · Strategy &amp; consulting
+        </p>
       </section>
 
       <!-- MARQUEE -->
       <section class="marquee" aria-hidden="true">
         <div class="marquee__track" id="marquee">
           <span class="marquee__item">
-            3D &amp; WebGL <span class="star">✦</span> Brand <span class="star">✦</span>
-            Motion <span class="star">✦</span> Web Design <span class="star">✦</span>
-            Development <span class="star">✦</span> Strategy <span class="star">✦</span>
+            3D &amp; WebGL <span class="star">✦</span> AI Apps <span class="star">✦</span>
+            App Development <span class="star">✦</span> Web Design <span class="star">✦</span>
+            Brand <span class="star">✦</span> Motion <span class="star">✦</span>
           </span>
         </div>
       </section>
