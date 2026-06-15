@@ -32,8 +32,11 @@
   <body>
     <!-- Preloader -->
     <div class="preloader" id="preloader" aria-hidden="true">
-      <div class="preloader__count" id="preloaderCount">0</div>
-      <div class="preloader__word">The Project Hero — Digital Studio</div>
+      <div class="preloader__brand">
+        <span class="preloader__mark" id="preloaderMark"></span>
+        <span class="preloader__name">The Project Hero</span>
+      </div>
+      <div class="preloader__word">Immersive Digital Studio</div>
     </div>
 
     <!-- Custom cursor -->
@@ -44,7 +47,7 @@
 
     <!-- Nav -->
     <header class="nav">
-      <a href="/" class="nav__brand"><span class="dot"></span>The Project Hero</a>
+      <a href="/" class="nav__brand"><span class="nav__mark"></span>The Project Hero</a>
       <nav class="nav__links" aria-label="Primary">
         <a href="/#capabilities" data-cursor="See">What we do</a>
         <a href="/studio/" data-cursor="About">Studio</a>
@@ -78,8 +81,8 @@
       <!-- STATEMENT -->
       <section class="section wrap">
         <p class="eyebrow" data-reveal="fade">What we do</p>
-        <h2 class="statement" data-reveal="words" style="margin-top: 1.5rem">
-          We design and engineer <span class="accent">immersive</span> digital
+        <h2 class="statement" data-fill style="margin-top: 1.5rem">
+          We design and engineer <em>immersive</em> digital
           experiences that move people — and move metrics.
         </h2>
       </section>
@@ -138,7 +141,7 @@
       <section class="section wrap">
         <div class="cta">
           <p class="eyebrow" data-reveal="fade">Have a project in mind?</p>
-          <h2 class="cta__title" data-reveal="words">
+          <h2 class="cta__title" data-fill>
             Let's make something <em>unforgettable</em>.
           </h2>
           <a href="/contact/" class="btn" data-magnetic data-cursor="Let's talk">

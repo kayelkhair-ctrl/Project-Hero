@@ -12,7 +12,7 @@ export function injectChrome(current = "") {
   if (navMount) {
     navMount.outerHTML = `
       <header class="nav">
-        <a href="/" class="nav__brand"><span class="dot"></span>The Project Hero</a>
+        <a href="/" class="nav__brand"><span class="nav__mark"></span>The Project Hero</a>
         <nav class="nav__links" aria-label="Primary">
           ${NAV_LINKS.map(
             (l) =>

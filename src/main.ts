@@ -12,12 +12,17 @@ import { initMenu } from "./modules/menu";
 import { renderCapabilities } from "./modules/content";
 import { initCapabilitiesShowcase } from "./modules/capabilitiesShowcase";
 import { initPageTransition } from "./modules/pageTransition";
+import { initScrollText } from "./modules/scrollText";
+import { initScrollProgress } from "./modules/scrollProgress";
+import { injectMarks } from "./modules/brand";
 import { initHero } from "./gl/hero";
 
 function boot() {
   // Current year in footer.
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  injectMarks();
 
   // Inject dynamic content first so reveals can measure it.
   renderCapabilities();
@@ -30,12 +35,14 @@ function boot() {
   initMenu();
   initCapabilitiesShowcase();
   initPageTransition();
+  initScrollProgress();
 
   // WebGL hero (only present on the home page).
   const hero = initHero();
 
-  // Scroll reveals.
+  // Scroll reveals + scroll-fill text.
   initReveals();
+  initScrollText();
 
   // Preloader, then reveal the hero distortion.
   runPreloader().then(() => {

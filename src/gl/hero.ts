@@ -188,6 +188,7 @@ export function initHero() {
   const mouse = new Vector2(0, 0);
   const mouseTarget = new Vector2(0, 0);
 
+  let baseScale = 1;
   function resize() {
     const rect = canvas!.getBoundingClientRect();
     const w = rect.width || window.innerWidth;
@@ -195,8 +196,12 @@ export function initHero() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    mesh.position.x = w > 900 ? 1.15 : 0;
-    mesh.position.y = w > 900 ? 0.1 : 0.35;
+    const wide = w > 900;
+    // On phones, tuck the blob lower-right and shrink it so the headline and
+    // nav stay clean; on desktop it sits to the right of the copy.
+    mesh.position.x = wide ? 1.15 : 0.6;
+    mesh.position.y = wide ? 0.1 : -0.85;
+    baseScale = wide ? 1 : 0.72;
     camera.updateProjectionMatrix();
   }
   resize();
@@ -232,7 +237,7 @@ export function initHero() {
     uMouse.value.set(mouse.x, mouse.y);
     uScroll.value = scrollProgress;
 
-    mesh.scale.setScalar(1 + scrollProgress * 0.3);
+    mesh.scale.setScalar(baseScale * (1 + scrollProgress * 0.3));
     mesh.rotation.y = mouse.x * 0.5 + (reduced ? 0 : t * 0.08) + scrollProgress * 1.2;
     mesh.rotation.x = mouse.y * 0.35 + scrollProgress * 0.5;
 
