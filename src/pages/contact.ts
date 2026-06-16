@@ -22,7 +22,7 @@ form?.addEventListener("submit", (e) => {
   const budget = String(data.get("budget") || "Not specified");
   const message = String(data.get("message") || "");
 
-  const subject = `New project enquiry — ${name}`;
+  const subject = `New project enquiry from ${name}`;
   const body = [
     `Name: ${name}`,
     `Email: ${email}`,

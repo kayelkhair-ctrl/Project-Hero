@@ -22,7 +22,7 @@ export const capabilities: Capability[] = [
     num: "01",
     key: "webgl",
     name: "Digital Transformation",
-    desc: "End-to-end programmes that modernise how your business operates online — strategy, systems, process and technology, joined up.",
+    desc: "End-to-end programmes that modernise how your business operates online: strategy, systems, process and technology, joined up.",
   },
   {
     num: "02",
@@ -34,7 +34,7 @@ export const capabilities: Capability[] = [
     num: "03",
     key: "seo",
     name: "SEO & GEO Visibility",
-    desc: "Rank on Google and get cited in AI answers — ChatGPT, Gemini, Perplexity. A research-led visibility system built to compound over time.",
+    desc: "Rank on Google and get cited in AI answers: ChatGPT, Gemini, Perplexity. A research-led visibility system built to compound over time.",
   },
   {
     num: "04",
@@ -46,7 +46,7 @@ export const capabilities: Capability[] = [
     num: "05",
     key: "app",
     name: "Web Application Development",
-    desc: "Bespoke web applications — from internal tools and client portals to full customer-facing products.",
+    desc: "Bespoke web applications: from internal tools and client portals to full customer-facing products.",
   },
   {
     num: "06",

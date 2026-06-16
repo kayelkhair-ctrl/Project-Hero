@@ -14,11 +14,6 @@ export function initHero() {
   const canvas = document.getElementById("gl") as HTMLCanvasElement | null;
   if (!canvas) return;
 
-  if (isTouch()) {
-    canvas.style.display = "none";
-    return;
-  }
-
   const heroEl = document.getElementById("hero");
   const reduced = prefersReducedMotion();
   const speed = reduced ? 0 : 0.003;

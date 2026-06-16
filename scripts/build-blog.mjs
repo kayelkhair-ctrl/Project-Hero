@@ -26,7 +26,7 @@ function articleHTML(post) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${post.title} — The Project Hero</title>
+    <title>${post.title} | The Project Hero</title>
     <meta name="description" content="${post.excerpt.replace(/"/g, "&quot;")}" />
     <link rel="canonical" href="https://theprojecthero.co.uk/insights/${post.slug}/" />
     <meta property="og:title" content="${post.title}" />

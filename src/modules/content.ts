@@ -51,7 +51,7 @@ export function renderWork(targetId = "work-grid") {
       (p) => `
       <a class="work-card" href="/work/#${p.slug}" data-cursor="View" aria-label="${p.title}">
         <div class="work-card__media">
-          <img src="${placeholderArt(p.title, p.c1, p.c2)}" alt="${p.title} — ${p.tag}" loading="lazy" />
+          <img src="${placeholderArt(p.title, p.c1, p.c2)}" alt="${p.title}, ${p.tag}" loading="lazy" />
         </div>
         <div class="work-card__meta">
           <span class="work-card__title">${p.title}</span>
@@ -72,7 +72,7 @@ export function renderWorkPanels(targetId = "work-h-track") {
       <a class="work-panel" href="/work/#${p.slug}" data-cursor="View" aria-label="${p.title}">
         <span class="work-panel__index">0${i + 1}</span>
         <div class="work-panel__media">
-          <img src="${placeholderArt(p.title, p.c1, p.c2)}" alt="${p.title} — ${p.tag}" loading="lazy" />
+          <img src="${placeholderArt(p.title, p.c1, p.c2)}" alt="${p.title}, ${p.tag}" loading="lazy" />
         </div>
         <div class="work-panel__meta">
           <span class="work-panel__title">${p.title}</span>
