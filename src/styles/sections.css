@@ -265,12 +265,17 @@
   padding-bottom: clamp(2.5rem, 6vw, 6rem);
   overflow: hidden;
 }
+/* Initial size only — JS repositions after cobe wraps the canvas in its own div */
 .hero__canvas {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-canvas);
+  width: min(64vh, 50vw);
+  height: min(64vh, 50vw);
+  opacity: 0;
+}
+@media (max-width: 820px) {
+  .hero__canvas {
+    display: none;
+  }
 }
 .hero__inner {
   position: relative;
