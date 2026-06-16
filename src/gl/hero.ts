@@ -74,7 +74,7 @@ const vertex = /* glsl */ `
   }
   float fbm(vec3 p){
     float v = 0.0, a = 0.5;
-    for(int i=0;i<2;i++){ v += a*snoise(p); p *= 2.0; a *= 0.5; }
+    for(int i=0;i<3;i++){ v += a*snoise(p); p *= 2.1; a *= 0.5; }
     return v;
   }
   float disp(vec3 pos){
@@ -112,9 +112,8 @@ const vertex = /* glsl */ `
   }
 `;
 
-// Frosted glass: face normals from screen-space derivatives (so cubes/slabs get
-// crisp faces and the blob reads as faceted crystal), transparent body, soft
-// specular and a milky frost tint.
+// Premium glass: nearly-transparent body, sharp specular highlights, iridescent
+// Fresnel rim (replaces the old dark-edge look), and face-normals for crisp flat forms.
 const fragment = /* glsl */ `
   precision highp float;
   uniform vec3  uAccent;
@@ -124,7 +123,7 @@ const fragment = /* glsl */ `
   varying float vD;
 
   vec3 palette(float t){
-    return 0.55 + 0.45*cos(6.2831*(vec3(0.0,0.33,0.67)+t));
+    return 0.5 + 0.5*cos(6.2831*(vec3(0.0,0.33,0.67)+t));
   }
 
   void main(){
@@ -133,31 +132,48 @@ const fragment = /* glsl */ `
     if (dot(N, V) < 0.0) N = -N;
     vec3 R = reflect(-V, N);
 
-    float fres = pow(1.0 - max(dot(N, V), 0.0), 3.0);
+    float NdotV = max(dot(N, V), 0.0);
+    // Power 5 = tight, crisp glass Fresnel (vs old power 3 which was wide and soft)
+    float fres = pow(1.0 - NdotV, 5.0);
 
+    // Environment: warm cream top (matches page bg), bright white below
     float up = R.y * 0.5 + 0.5;
-    vec3 env = mix(vec3(0.8), vec3(1.0), smoothstep(0.3, 1.0, up));
+    vec3 env = mix(vec3(0.91, 0.89, 0.85), vec3(1.0, 1.0, 1.0), smoothstep(0.15, 0.95, up));
 
-    vec3 L1 = normalize(vec3(0.4, 0.8, 0.6));
-    vec3 L2 = normalize(vec3(-0.5, -0.2, 0.7));
-    float shin = mix(90.0, 22.0, uFrost);
-    float spec = pow(max(dot(R, L1), 0.0), shin) + 0.5 * pow(max(dot(R, L2), 0.0), shin*0.7);
+    // Three-light setup: key (top-right), fill (bottom-left), backlight rim
+    vec3 L1 = normalize(vec3(0.55, 0.85, 0.5));
+    vec3 L2 = normalize(vec3(-0.45, -0.15, 0.75));
+    vec3 L3 = normalize(vec3(0.0, 0.5, -0.85));
+    // Very high shininess = sharp glass highlight
+    float shin   = mix(320.0, 50.0, uFrost);
+    float spec1  = pow(max(dot(R, L1), 0.0), shin);
+    float spec2  = 0.30 * pow(max(dot(R, L2), 0.0), shin * 0.55);
+    float spec3  = 0.55 * pow(max(dot(R, -L3), 0.0), shin * 0.28);
+    float spec   = spec1 + spec2 + spec3;
 
-    vec3 disp = palette(fres * 0.6 + vD * 0.4 + uTime * 0.02);
-    vec3 milk = vec3(0.88, 0.91, 0.98);
-    vec3 edge = vec3(0.28, 0.34, 0.5); // dark, cool refractive edge for contrast
+    // Iridescent prismatic rim — replaces old dark-edge tint
+    vec3 prism = palette(fres * 0.55 + vD * 0.25 + uTime * 0.012);
 
-    vec3 col = mix(env, milk, uFrost * 0.7);
-    // Directional face shading so flat faces (cube/pyramid/slab) read as form.
-    float diff = dot(N, normalize(vec3(0.35, 0.7, 0.55))) * 0.5 + 0.5;
-    col *= 0.7 + diff * 0.5;
-    col = mix(col, edge, fres * 0.55);        // defined dark edges on the light page
-    col = mix(col, disp, fres * 0.22);        // hint of prismatic colour
-    col = mix(col, uAccent, fres * 0.14);
-    col += spec * (1.7 - uFrost * 0.5);
+    // Body: env reflection + gentle milk frost
+    vec3 milk = vec3(0.96, 0.97, 1.0);
+    vec3 col  = mix(env, milk, uFrost * 0.38);
 
-    // Enough body to read on a light background, still glassy.
-    float alpha = clamp(mix(0.24, 0.55, uFrost) + fres * 0.55 + spec, 0.0, 1.0);
+    // Diffuse shading preserves form on flat faces (cube/slab/gem)
+    float diff = dot(N, L1) * 0.5 + 0.5;
+    col *= 0.78 + diff * 0.35;
+
+    // Iridescent colour bleeds in on the rim
+    col = mix(col, prism * 1.3, fres * 0.42);
+    // Accent-blue tint concentrates on the outermost edge
+    col = mix(col, uAccent * 1.8, fres * fres * 0.18);
+    // Sharp, bright specular (glass reflects hard)
+    col += spec * (2.4 - uFrost * 0.5);
+
+    // Alpha: near-transparent body, strong glass rim + highlights
+    float alpha = clamp(
+      mix(0.05, 0.38, uFrost) + fres * 0.78 + spec * 1.2,
+      0.0, 1.0
+    );
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -178,7 +194,7 @@ export function initHero() {
   });
   renderer.setClearColor(0x000000, 0);
 
-  const detail = isTouch() ? 32 : 56;
+  const detail = isTouch() ? 38 : 72;
   const geometry = new IcosahedronGeometry(1.3, detail);
 
   const uTime = { value: 0 };
@@ -322,7 +338,7 @@ export function initHero() {
   return {
     reveal() {
       gsap.to(uDistort, {
-        value: reduced ? 0.2 : 0.5,
+        value: reduced ? 0.2 : 0.65,
         duration: 1.6,
         ease: "power3.out",
       });
