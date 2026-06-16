@@ -142,7 +142,8 @@ const webgl: Draw = (g, w, h, t) => {
   });
 };
 
-// App Development — a phone with a scrolling list UI.
+// App Development — a phone whose screens slide through an app flow
+// (list → profile → chart), demonstrating a real product.
 const app: Draw = (g, w, h, t) => {
   const pw = h * 0.46,
     ph = h * 0.78,
@@ -152,35 +153,68 @@ const app: Draw = (g, w, h, t) => {
   g.lineWidth = 1.5;
   roundRect(g, x, y, pw, ph, 16);
   g.stroke();
-  // notch
   g.fillStyle = INK;
   roundRect(g, x + pw / 2 - 12, y + 8, 24, 5, 3);
   g.fill();
+
+  const ix = x + 8,
+    iy = y + 22,
+    iw = pw - 16,
+    ih = ph - 60;
   g.save();
-  roundRect(g, x + 8, y + 22, pw - 16, ph - 60, 8);
+  roundRect(g, ix, iy, iw, ih, 8);
   g.clip();
-  const scroll = (t * 30) % 44;
-  for (let i = -1; i < 7; i++) {
-    const yy = y + 30 + i * 44 - scroll;
-    g.fillStyle = `rgba(11,11,11,0.05)`;
-    roundRect(g, x + 14, yy, pw - 28, 34, 6);
+
+  const screens = 3;
+  const seg = t / 2.2;
+  const idx = Math.floor(seg) % screens;
+  const k = ease(Math.min(1, (seg % 1) / 0.5));
+  const shift = (idx + k) * iw;
+
+  const soft = (a = 0.06) => `rgba(11,11,11,${a})`;
+  // screen 0 — list
+  const s0 = ix - shift;
+  for (let i = 0; i < 4; i++) {
+    const ry = iy + 16 + i * (ih * 0.2);
+    g.fillStyle = soft();
+    roundRect(g, s0 + 12, ry, iw - 24, ih * 0.15, 6);
     g.fill();
-    g.fillStyle = ACCENT;
+    g.fillStyle = i === 1 ? ACCENT : DIM;
     g.beginPath();
-    g.arc(x + 30, yy + 17, 8, 0, Math.PI * 2);
+    g.arc(s0 + 28, ry + ih * 0.075, 7, 0, Math.PI * 2);
     g.fill();
-    g.fillStyle = DIM;
-    roundRect(g, x + 46, yy + 10, pw * 0.4, 5, 2);
-    g.fill();
-    roundRect(g, x + 46, yy + 20, pw * 0.28, 4, 2);
+  }
+  // screen 1 — profile
+  const s1 = ix + iw - shift;
+  g.fillStyle = ACCENT;
+  g.beginPath();
+  g.arc(s1 + iw / 2, iy + ih * 0.22, iw * 0.13, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = soft(0.1);
+  roundRect(g, s1 + iw * 0.3, iy + ih * 0.4, iw * 0.4, 7, 3);
+  g.fill();
+  roundRect(g, s1 + iw * 0.22, iy + ih * 0.48, iw * 0.56, 5, 2);
+  g.fill();
+  g.fillStyle = ACCENT;
+  roundRect(g, s1 + iw * 0.2, iy + ih * 0.66, iw * 0.6, ih * 0.1, 8);
+  g.fill();
+  // screen 2 — chart
+  const s2 = ix + iw * 2 - shift;
+  const bn = 5;
+  for (let i = 0; i < bn; i++) {
+    const bh2 = (0.3 + (i / (bn - 1)) * 0.7) * ih * 0.5;
+    g.fillStyle = i === bn - 1 ? ACCENT : soft(0.12);
+    const cw = (iw * 0.7) / bn - 6;
+    roundRect(g, s2 + iw * 0.16 + i * ((iw * 0.7) / bn), iy + ih * 0.75 - bh2, cw, bh2, 3);
     g.fill();
   }
   g.restore();
-  // tab bar
-  for (let i = 0; i < 4; i++) {
-    g.fillStyle = i === 1 ? ACCENT : DIM;
+
+  // tab bar — active dot follows the current screen
+  for (let i = 0; i < screens; i++) {
+    g.fillStyle = i === idx ? ACCENT : DIM;
     g.beginPath();
-    g.arc(x + pw * (0.2 + i * 0.2), y + ph - 18, 4, 0, Math.PI * 2);
+    g.arc(x + pw * (0.32 + i * 0.18), y + ph - 18, i === idx ? 4 : 3, 0, Math.PI * 2);
     g.fill();
   }
 };
@@ -246,19 +280,21 @@ const ai: Draw = (g, w, h, t) => {
   g.textBaseline = "alphabetic";
 };
 
-// Brand — a morphing polygon cycling through shapes.
+// Brand — a morphing mark with a colour palette assembling below it.
 const brand: Draw = (g, w, h, t) => {
   const cx = w / 2,
-    cy = h / 2,
-    r = Math.min(w, h) * 0.26;
+    cy = h * 0.42,
+    r = Math.min(w, h) * 0.22;
   const shapes = [3, 4, 6, 64]; // triangle, square, hexagon, circle
   const seg = t * 0.4;
   const idx = Math.floor(seg) % shapes.length;
   const next = (idx + 1) % shapes.length;
   const k = ease(seg % 1);
   const N = 64;
-  g.lineWidth = 1.5;
+  // soft accent fill
+  g.fillStyle = "rgba(46,91,255,0.1)";
   g.strokeStyle = INK;
+  g.lineWidth = 1.5;
   g.beginPath();
   for (let i = 0; i <= N; i++) {
     const a = (i / N) * Math.PI * 2 - Math.PI / 2;
@@ -269,11 +305,36 @@ const brand: Draw = (g, w, h, t) => {
     const y = cy + Math.sin(a + t * 0.3) * rr;
     i === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
   }
+  g.closePath();
+  g.fill();
   g.stroke();
   g.fillStyle = ACCENT;
   g.beginPath();
   g.arc(cx, cy, 5, 0, Math.PI * 2);
   g.fill();
+
+  // palette swatches assemble in sequence below
+  const swatches = ["#2e5bff", "#0b0b0b", "#ff6b4a", "#f3f1ec"];
+  const sw = Math.min(w * 0.1, 46);
+  const gap = sw * 0.35;
+  const totalW = swatches.length * sw + (swatches.length - 1) * gap;
+  const sx = cx - totalW / 2;
+  const sy = h * 0.74;
+  const baseA = g.globalAlpha;
+  swatches.forEach((c, i) => {
+    const cyc = (t * 1.2 - i * 0.4) % 6;
+    const a = Math.max(0, Math.min(1, cyc < 0 ? 0 : cyc));
+    g.globalAlpha = baseA * a;
+    g.fillStyle = c;
+    roundRect(g, sx + i * (sw + gap), sy - a * 4, sw, sw, 8);
+    g.fill();
+    if (c === "#f3f1ec") {
+      g.strokeStyle = "rgba(11,11,11,0.18)";
+      g.lineWidth = 1;
+      g.stroke();
+    }
+  });
+  g.globalAlpha = baseA;
 };
 
 // SEO & GEO — a search bar with results, the brand climbing to #1, plus a
