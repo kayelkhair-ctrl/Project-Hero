@@ -1,5 +1,12 @@
 # Cloudflare Pages: extensionless routes → directory index.
-/services /services/index.html 200
+/services                        /services/index.html                        200
+/services/digital-transformation /services/digital-transformation/index.html 200
+/services/web-design-development /services/web-design-development/index.html 200
+/services/web-application-development /services/web-application-development/index.html 200
+/services/website-as-a-service   /services/website-as-a-service/index.html   200
+/services/seo-geo                /services/seo-geo/index.html                200
+/services/ai-applications-automation /services/ai-applications-automation/index.html 200
+/services/hosting-care-support   /services/hosting-care-support/index.html   200
 /work     /work/index.html      200
 /studio   /studio/index.html    200
 /insights /insights/index.html  200

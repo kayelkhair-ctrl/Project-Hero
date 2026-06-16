@@ -100,7 +100,22 @@ writeFileSync(dataFile, JSON.stringify(index, null, 2));
 
 // Sitemap: static routes + every generated article.
 const SITE = "https://theprojecthero.co.uk";
-const routes = ["/", "/services/", "/work/", "/studio/", "/insights/", "/contact/", "/faq/"];
+const routes = [
+  "/",
+  "/services/",
+  "/services/digital-transformation/",
+  "/services/web-design-development/",
+  "/services/web-application-development/",
+  "/services/website-as-a-service/",
+  "/services/seo-geo/",
+  "/services/ai-applications-automation/",
+  "/services/hosting-care-support/",
+  "/work/",
+  "/studio/",
+  "/insights/",
+  "/contact/",
+  "/faq/",
+];
 const urls = [
   ...routes.map((r) => ({ loc: SITE + r })),
   ...posts.map((p) => ({ loc: `${SITE}/insights/${p.slug}/`, lastmod: p.date })),
