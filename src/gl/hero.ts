@@ -265,7 +265,27 @@ export function initHero() {
 
     renderer.render(scene, camera);
   }
-  renderer.setAnimationLoop(frame);
+  // Only render when the tab is visible AND the hero is on-screen — protects
+  // battery, CPU and INP, and stops the canvas costing anything once scrolled past.
+  let tabVisible = !document.hidden;
+  let onScreen = true;
+  const syncLoop = () =>
+    renderer.setAnimationLoop(tabVisible && onScreen ? frame : null);
+  document.addEventListener("visibilitychange", () => {
+    tabVisible = !document.hidden;
+    syncLoop();
+  });
+  const heroEl = document.getElementById("hero");
+  if (heroEl && "IntersectionObserver" in window) {
+    new IntersectionObserver(
+      (entries) => {
+        onScreen = entries[0]?.isIntersecting ?? true;
+        syncLoop();
+      },
+      { threshold: 0 }
+    ).observe(heroEl);
+  }
+  syncLoop();
 
   // ---- morph state machine: blob → shape → blob, advancing through SEQUENCE.
   let si = 0;

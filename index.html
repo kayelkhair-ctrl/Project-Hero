@@ -3,21 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Project Hero — Immersive Digital Studio</title>
+    <title>The Project Hero — Websites, SEO/GEO &amp; AI Apps · Bradford, UK</title>
     <meta
       name="description"
-      content="The Project Hero is a creative digital studio building immersive 3D websites and digital experiences for ambitious brands."
+      content="The Project Hero designs, builds and manages modern websites — with SEO, GEO and AI built in. A managed digital growth system for ambitious UK businesses. Based in Bradford."
     />
     <meta name="theme-color" content="#f3f1ec" />
+    <link rel="canonical" href="https://theprojecthero.co.uk/" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="The Project Hero — Immersive Digital Studio" />
+    <meta property="og:title" content="The Project Hero — Websites, SEO/GEO &amp; AI Apps" />
     <meta
       property="og:description"
-      content="We build immersive 3D websites and digital experiences for ambitious brands."
+      content="Modern websites, SEO/GEO visibility and AI apps — designed, built and managed by a lean UK studio in Bradford."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://theprojecthero.co.uk/" />
+    <meta property="og:locale" content="en_GB" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,6 +29,42 @@
     />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- LocalBusiness / Organization schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "The Project Hero",
+        "description": "Website as a Service, SEO/GEO visibility and AI apps for businesses. Modern websites designed, built and managed in-house.",
+        "url": "https://theprojecthero.co.uk/",
+        "email": "info@theprojecthero.co.uk",
+        "telephone": "+441274505805",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Euroway House, Roydsdale Way",
+          "addressLocality": "Bradford",
+          "postalCode": "BD4 6SE",
+          "addressCountry": "GB"
+        },
+        "areaServed": "GB",
+        "knowsAbout": [
+          "Web Design",
+          "Website as a Service",
+          "Website Management",
+          "Web Hosting",
+          "SEO",
+          "Generative Engine Optimisation",
+          "AI Applications",
+          "Automation"
+        ],
+        "makesOffer": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Websites as a Service" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "SEO & GEO Visibility" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Apps & Automation" } }
+        ]
+      }
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </head>
   <body>
@@ -36,7 +74,7 @@
         <span class="preloader__mark" id="preloaderMark"></span>
         <span class="preloader__name">The Project Hero</span>
       </div>
-      <div class="preloader__word">Immersive Digital Studio</div>
+      <div class="preloader__word">Websites · SEO · AI Apps</div>
     </div>
 
     <!-- Custom cursor -->
@@ -49,7 +87,7 @@
     <header class="nav">
       <a href="/" class="nav__brand"><span class="nav__mark"></span>The Project Hero</a>
       <nav class="nav__links" aria-label="Primary">
-        <a href="/#capabilities" data-cursor="See">What we do</a>
+        <a href="/services/" data-cursor="See">Services</a>
         <a href="/studio/" data-cursor="About">Studio</a>
         <a href="/insights/" data-cursor="Read">Insights</a>
         <a href="/contact/" data-cursor="Say hi">Contact</a>
@@ -62,16 +100,16 @@
       <section class="hero" id="hero">
         <canvas class="hero__canvas" id="gl"></canvas>
         <div class="hero__inner wrap">
-          <p class="eyebrow" data-reveal="fade">Creative Digital Studio · Est. Bradford, UK</p>
+          <p class="eyebrow" data-reveal="fade">Website as a Service · Bradford, UK</p>
           <h1 class="hero__title" data-reveal="lines">
-            <span class="line"><span>We build immersive</span></span>
-            <span class="line"><span>websites &amp; digital</span></span>
-            <span class="line"><span>experiences.</span></span>
+            <span class="line"><span>Websites built to</span></span>
+            <span class="line"><span>rank, convert</span></span>
+            <span class="line"><span>and grow.</span></span>
           </h1>
           <div class="hero__meta">
             <p class="hero__lead" data-reveal="fade">
-              A studio where craft and narrative become one — 3D, WebGL and
-              motion for brands that refuse to blend in.
+              We design, build and manage modern websites — then layer on the
+              SEO, GEO and AI tools that turn them into a growth engine.
             </p>
             <span class="hero__scroll">Scroll <span class="arrow">↓</span></span>
           </div>
@@ -80,10 +118,10 @@
 
       <!-- STATEMENT -->
       <section class="section wrap">
-        <p class="eyebrow" data-reveal="fade">What we do</p>
+        <p class="eyebrow" data-reveal="fade">The approach</p>
         <h2 class="statement" data-fill style="margin-top: 1.5rem">
-          We design and engineer <em>immersive</em> digital
-          experiences that move people — and move metrics.
+          A website is just the start. We build the <em>system</em> around it —
+          visibility, automation and growth.
         </h2>
       </section>
 
@@ -105,7 +143,7 @@
           </div>
         </div>
         <p class="caps__also" data-reveal="fade">
-          Also: Hosting &amp; care · Motion &amp; animation · Strategy &amp; consulting
+          Also: Hosting &amp; care · Security &amp; support · Quarterly reviews · Strategy &amp; consulting
         </p>
       </section>
 
@@ -113,9 +151,9 @@
       <section class="marquee" aria-hidden="true">
         <div class="marquee__track" id="marquee">
           <span class="marquee__item">
-            3D &amp; WebGL <span class="star">✦</span> AI Apps <span class="star">✦</span>
-            App Development <span class="star">✦</span> Web Design <span class="star">✦</span>
-            Brand <span class="star">✦</span> Motion <span class="star">✦</span>
+            Websites as a Service <span class="star">✦</span> SEO &amp; GEO <span class="star">✦</span>
+            AI Apps <span class="star">✦</span> Hosting &amp; Care <span class="star">✦</span>
+            Web Design <span class="star">✦</span> Automation <span class="star">✦</span>
           </span>
         </div>
       </section>
@@ -128,14 +166,14 @@
         </div>
         <div style="max-width: 60ch">
           <p class="hero__lead" data-reveal="fade" style="margin-bottom: 1.5rem">
-            The Project Hero began with a simple belief: every ambitious brand
-            deserves a website that feels like an experience, not a brochure.
+            The Project Hero started with websites — and a belief that every
+            business deserves one that's looked after, not left to rot.
           </p>
           <p data-reveal="fade" style="color: var(--muted)">
-            We're a small, senior team of designers and engineers who care about
-            the details most people never notice — the weight of a transition,
-            the physics of a scroll, the way light moves across a surface. We
-            build, ship and look after the work long after launch.
+            Today we build the whole system around it: design and build, hosting
+            and security, SEO and GEO visibility, and AI tools that do real work.
+            Leaner than a traditional agency, strategic where it counts — and
+            based in Bradford, working with businesses everywhere.
           </p>
         </div>
       </section>
@@ -143,12 +181,12 @@
       <!-- CTA -->
       <section class="section wrap">
         <div class="cta">
-          <p class="eyebrow" data-reveal="fade">Have a project in mind?</p>
+          <p class="eyebrow" data-reveal="fade">Ready to move ahead?</p>
           <h2 class="cta__title" data-fill>
-            Let's make something <em>unforgettable</em>.
+            Let's build something that <em>grows</em>.
           </h2>
           <a href="/contact/" class="btn" data-magnetic data-cursor="Let's talk">
-            Start a project →
+            Get a free website audit →
           </a>
         </div>
       </section>
@@ -164,7 +202,7 @@
           <div class="footer__col">
             <h4>Menu</h4>
             <ul>
-              <li><a href="/work/" data-cursor="View">Work</a></li>
+              <li><a href="/services/" data-cursor="See">Services</a></li>
               <li><a href="/studio/" data-cursor="About">Studio</a></li>
               <li><a href="/insights/" data-cursor="Read">Insights</a></li>
               <li><a href="/contact/" data-cursor="Say hi">Contact</a></li>
@@ -181,7 +219,11 @@
         </div>
         <div class="footer__bottom">
           <span>© <span id="year"></span> The Project Hero. All rights reserved.</span>
-          <span>Bradford · United Kingdom</span>
+          <span>
+            <a href="/faq/" data-cursor="Read">FAQ</a> ·
+            <a href="/privacy/" data-cursor="Read">Privacy</a> ·
+            Bradford · United Kingdom
+          </span>
         </div>
       </div>
       <div class="footer__mega" aria-hidden="true">

@@ -1,7 +1,7 @@
 // Shared nav + footer markup injected on inner pages so there's a single
 // source of truth. `current` highlights the active nav item.
 const NAV_LINKS = [
-  { href: "/#capabilities", label: "What we do", cursor: "See" },
+  { href: "/services/", label: "Services", cursor: "See" },
   { href: "/studio/", label: "Studio", cursor: "About" },
   { href: "/insights/", label: "Insights", cursor: "Read" },
   { href: "/contact/", label: "Contact", cursor: "Say hi" },
@@ -49,7 +49,11 @@ export function injectChrome(current = "") {
           </div>
           <div class="footer__bottom">
             <span>© <span id="year"></span> The Project Hero. All rights reserved.</span>
-            <span>Bradford · United Kingdom</span>
+            <span>
+              <a href="/faq/" data-cursor="Read">FAQ</a> ·
+              <a href="/privacy/" data-cursor="Read">Privacy</a> ·
+              Bradford · United Kingdom
+            </span>
           </div>
         </div>
         <div class="footer__mega" aria-hidden="true">

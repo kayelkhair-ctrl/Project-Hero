@@ -28,6 +28,7 @@ function articleHTML(post) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${post.title} — The Project Hero</title>
     <meta name="description" content="${post.excerpt.replace(/"/g, "&quot;")}" />
+    <link rel="canonical" href="https://theprojecthero.co.uk/insights/${post.slug}/" />
     <meta property="og:title" content="${post.title}" />
     <meta property="og:description" content="${post.excerpt.replace(/"/g, "&quot;")}" />
     <meta property="og:type" content="article" />
@@ -99,7 +100,7 @@ writeFileSync(dataFile, JSON.stringify(index, null, 2));
 
 // Sitemap: static routes + every generated article.
 const SITE = "https://theprojecthero.co.uk";
-const routes = ["/", "/work/", "/studio/", "/insights/", "/contact/"];
+const routes = ["/", "/services/", "/work/", "/studio/", "/insights/", "/contact/", "/faq/"];
 const urls = [
   ...routes.map((r) => ({ loc: SITE + r })),
   ...posts.map((p) => ({ loc: `${SITE}/insights/${p.slug}/`, lastmod: p.date })),
