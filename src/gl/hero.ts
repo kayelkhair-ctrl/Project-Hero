@@ -113,36 +113,45 @@ const fragment = /* glsl */ `
   void main(){
     vec3 V = normalize(vView);
 
-    // Cheap surface bump: perturb the normal by the screen-space gradient of
-    // the displacement so the chrome reflections ripple without vertex cost.
+    // Gentle surface bump from the displacement gradient — kept soft so the
+    // glass reads as smooth rather than lumpy.
     vec3 N = normalize(vNormal);
     vec3 dPdx = dFdx(vView);
     vec3 dPdy = dFdy(vView);
     float dHx = dFdx(vD);
     float dHy = dFdy(vD);
     vec3 bump = (dHx * cross(N, dPdy) + dHy * cross(dPdx, N));
-    N = normalize(N - bump * 6.0);
+    N = normalize(N - bump * 3.0);
 
     vec3 R = reflect(-V, N);
 
-    // Faked softbox environment: bright top, mid sides, dim bottom.
-    float up = R.y*0.5 + 0.5;
-    vec3 env = mix(vec3(0.62), vec3(1.0), smoothstep(0.35,0.95,up));
-    env = mix(env, vec3(0.50,0.54,0.62), smoothstep(0.35,0.0,up));
+    // Fresnel — the heart of the glass look: clear facing the camera, bright
+    // and reflective at grazing angles.
+    float fres = pow(1.0 - max(dot(N, V), 0.0), 3.0);
 
-    // Specular hotspot from a key light.
-    vec3 L = normalize(vec3(0.5, 0.8, 0.7));
-    float spec = pow(max(dot(R, L), 0.0), 48.0);
+    // Soft environment caught on the surface.
+    float up = R.y * 0.5 + 0.5;
+    vec3 env = mix(vec3(0.78), vec3(1.0), smoothstep(0.3, 1.0, up));
 
-    float fres = pow(1.0 - max(dot(N, V), 0.0), 2.5);
-    vec3 irid = palette(fres*0.8 + vD*0.6 + uTime*0.02);
+    // Sharp specular glints (two lights) for that polished-glass sparkle.
+    vec3 L1 = normalize(vec3(0.4, 0.8, 0.6));
+    vec3 L2 = normalize(vec3(-0.5, -0.2, 0.7));
+    float spec = pow(max(dot(R, L1), 0.0), 90.0) + 0.5 * pow(max(dot(R, L2), 0.0), 60.0);
 
-    vec3 col = env;                          // base chrome reflection
-    col = mix(col, irid, fres*0.55);         // iridescent rim
-    col += spec * 1.2;                        // highlight
-    col = mix(col, uAccent, fres*0.18);      // brand tint in the grazing angles
+    // Edge dispersion (subtle prismatic colour where glass bends light most).
+    vec3 disp = palette(fres * 0.7 + vD * 0.4 + uTime * 0.02);
 
-    gl_FragColor = vec4(col, 1.0);
+    // Cool, near-clear glass tint; rim picks up environment + dispersion.
+    vec3 col = mix(vec3(0.84, 0.9, 1.0), env, 0.5);
+    col = mix(col, disp, fres * 0.4);
+    col = mix(col, uAccent, fres * 0.12);
+    col += spec * 2.2;
+
+    // Transparent through the middle, opaque at the rim + on highlights, so the
+    // page shows through like real glass.
+    float alpha = clamp(0.14 + fres * 0.85 + spec * 1.4, 0.0, 1.0);
+
+    gl_FragColor = vec4(col, alpha);
   }
 `;
 
@@ -173,6 +182,8 @@ export function initHero() {
   const material = new ShaderMaterial({
     vertexShader: vertex,
     fragmentShader: fragment,
+    transparent: true,
+    depthWrite: false,
     uniforms: {
       uTime,
       uDistort,
