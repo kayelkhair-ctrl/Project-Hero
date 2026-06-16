@@ -182,6 +182,13 @@ export function initHero() {
   const canvas = document.getElementById("gl") as HTMLCanvasElement | null;
   if (!canvas) return;
 
+  // Skip the blob entirely on touch/mobile — it looks bad at small sizes and
+  // costs GPU for no gain.
+  if (isTouch()) {
+    canvas.style.display = "none";
+    return;
+  }
+
   const scene = new Scene();
   const camera = new PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.z = 5.0;
