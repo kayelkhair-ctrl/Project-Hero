@@ -197,11 +197,11 @@ export function initHero() {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const wide = w > 900;
-    // Keep the whole blob in frame (it was clipping at the top); on phones tuck
-    // it into the lower-right corner and shrink it so it clears the headline.
-    mesh.position.x = wide ? 1.2 : 1.05;
-    mesh.position.y = wide ? -0.2 : -0.9;
-    baseScale = wide ? 0.95 : 0.62;
+    // Sit the blob in the right third (clear of the left-aligned headline) on
+    // desktop; tuck it into the lower-right corner on phones.
+    mesh.position.x = wide ? 1.85 : 1.05;
+    mesh.position.y = wide ? -0.1 : -0.9;
+    baseScale = wide ? 0.6 : 0.62;
     camera.updateProjectionMatrix();
   }
   resize();
