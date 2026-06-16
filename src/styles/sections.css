@@ -279,11 +279,7 @@
 }
 .hero__title {
   font-size: var(--fs-hero);
-  max-width: 16ch;
-  position: relative;
-}
-.hero__title .char {
-  will-change: transform;
+  max-width: 20ch;
 }
 .hero__title .line {
   display: block;

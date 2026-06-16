@@ -15,7 +15,6 @@ import { initPageTransition } from "./modules/pageTransition";
 import { initScrollText } from "./modules/scrollText";
 import { initScrollProgress } from "./modules/scrollProgress";
 import { injectMarks } from "./modules/brand";
-import { initHeadlinePhysics } from "./modules/headlinePhysics";
 import { initHero } from "./gl/hero";
 
 function boot() {
@@ -44,7 +43,6 @@ function boot() {
   // Scroll reveals + scroll-fill text.
   initReveals();
   initScrollText();
-  initHeadlinePhysics();
 
   // Preloader, then reveal the hero distortion.
   runPreloader().then(() => {
