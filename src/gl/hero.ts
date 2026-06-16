@@ -15,13 +15,17 @@ import { lerp, prefersReducedMotion, isTouch } from "../lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Shape ids morphed between (each sandwiched by the blob):
+//   1 sphere · 2 cube · 3 gem/pyramid · 4 app slab · 5 website plane
+const SEQUENCE = [1, 2, 3, 4, 5];
+
 const vertex = /* glsl */ `
   uniform float uTime;
   uniform float uDistort;
-  uniform float uScroll;
+  uniform float uMorph;
+  uniform float uShape;
   uniform vec2  uMouse;
-  varying vec3  vNormal;
-  varying vec3  vView;
+  varying vec3  vViewPos;
   varying float vD;
 
   vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
@@ -73,84 +77,87 @@ const vertex = /* glsl */ `
     for(int i=0;i<2;i++){ v += a*snoise(p); p *= 2.0; a *= 0.5; }
     return v;
   }
-  // Single-sample organic displacement (cheap enough for software WebGL and
-  // low-end GPUs). Surface bumps are recovered in the fragment via derivatives.
   float disp(vec3 pos){
     float t = uTime * 0.22;
     float warp = snoise(pos*0.85 + t);
     return fbm(pos*1.1 + warp*0.6 + t);
   }
 
+  vec3 cubeMap(vec3 d){
+    float m = max(abs(d.x), max(abs(d.y), abs(d.z)));
+    return d / m;
+  }
+
+  vec3 shapePos(vec3 dir){
+    float R = 1.3;
+    if (uShape < 1.5) return dir * R;                                   // sphere
+    if (uShape < 2.5) return cubeMap(dir) * R * 0.82;                   // cube
+    if (uShape < 3.5) return dir / (abs(dir.x)+abs(dir.y)+abs(dir.z)) * R * 1.3; // gem
+    if (uShape < 4.5) return cubeMap(dir) * vec3(0.5, 0.92, 0.16) * R;  // app slab (phone)
+    return cubeMap(dir) * vec3(1.25, 0.8, 0.12) * R;                    // website plane
+  }
+
   void main(){
+    vec3 dir = normalize(position);
     float d = disp(position);
-    float amt = uDistort * (0.55 + 0.45*length(uMouse)) + uScroll*0.35;
-    vec3 pd = position + normalize(position) * d * amt;
+    float amt = uDistort * (0.55 + 0.45 * length(uMouse));
+    vec3 blobP = position + dir * d * amt;
+    vec3 shapeP = shapePos(dir);
+    vec3 p = mix(blobP, shapeP, uMorph);
 
     vD = d;
-    vec4 mv = modelViewMatrix * vec4(pd, 1.0);
-    vView = -mv.xyz;
-    vNormal = normalize(normalMatrix * normal);
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    vViewPos = mv.xyz;
     gl_Position = projectionMatrix * mv;
   }
 `;
 
-// Cheap-but-premium look: a faked studio environment (vertical softbox
-// gradient) sampled by the reflected view vector, a crisp specular, an
-// iridescent fresnel rim and a touch of colour from displacement.
+// Frosted glass: face normals from screen-space derivatives (so cubes/slabs get
+// crisp faces and the blob reads as faceted crystal), transparent body, soft
+// specular and a milky frost tint.
 const fragment = /* glsl */ `
   precision highp float;
-  uniform vec3 uAccent;
+  uniform vec3  uAccent;
   uniform float uTime;
-  varying vec3 vNormal;
-  varying vec3 vView;
+  uniform float uFrost;
+  varying vec3  vViewPos;
   varying float vD;
 
   vec3 palette(float t){
-    // smooth iridescent ramp
     return 0.55 + 0.45*cos(6.2831*(vec3(0.0,0.33,0.67)+t));
   }
 
   void main(){
-    vec3 V = normalize(vView);
-
-    // Gentle surface bump from the displacement gradient — kept soft so the
-    // glass reads as smooth rather than lumpy.
-    vec3 N = normalize(vNormal);
-    vec3 dPdx = dFdx(vView);
-    vec3 dPdy = dFdy(vView);
-    float dHx = dFdx(vD);
-    float dHy = dFdy(vD);
-    vec3 bump = (dHx * cross(N, dPdy) + dHy * cross(dPdx, N));
-    N = normalize(N - bump * 3.0);
-
+    vec3 V = normalize(-vViewPos);
+    vec3 N = normalize(cross(dFdx(vViewPos), dFdy(vViewPos)));
+    if (dot(N, V) < 0.0) N = -N;
     vec3 R = reflect(-V, N);
 
-    // Fresnel — the heart of the glass look: clear facing the camera, bright
-    // and reflective at grazing angles.
     float fres = pow(1.0 - max(dot(N, V), 0.0), 3.0);
 
-    // Soft environment caught on the surface.
     float up = R.y * 0.5 + 0.5;
-    vec3 env = mix(vec3(0.78), vec3(1.0), smoothstep(0.3, 1.0, up));
+    vec3 env = mix(vec3(0.8), vec3(1.0), smoothstep(0.3, 1.0, up));
 
-    // Sharp specular glints (two lights) for that polished-glass sparkle.
     vec3 L1 = normalize(vec3(0.4, 0.8, 0.6));
     vec3 L2 = normalize(vec3(-0.5, -0.2, 0.7));
-    float spec = pow(max(dot(R, L1), 0.0), 90.0) + 0.5 * pow(max(dot(R, L2), 0.0), 60.0);
+    float shin = mix(90.0, 22.0, uFrost);
+    float spec = pow(max(dot(R, L1), 0.0), shin) + 0.5 * pow(max(dot(R, L2), 0.0), shin*0.7);
 
-    // Edge dispersion (subtle prismatic colour where glass bends light most).
-    vec3 disp = palette(fres * 0.7 + vD * 0.4 + uTime * 0.02);
+    vec3 disp = palette(fres * 0.6 + vD * 0.4 + uTime * 0.02);
+    vec3 milk = vec3(0.88, 0.91, 0.98);
+    vec3 edge = vec3(0.28, 0.34, 0.5); // dark, cool refractive edge for contrast
 
-    // Cool, near-clear glass tint; rim picks up environment + dispersion.
-    vec3 col = mix(vec3(0.84, 0.9, 1.0), env, 0.5);
-    col = mix(col, disp, fres * 0.4);
-    col = mix(col, uAccent, fres * 0.12);
-    col += spec * 2.2;
+    vec3 col = mix(env, milk, uFrost * 0.7);
+    // Directional face shading so flat faces (cube/pyramid/slab) read as form.
+    float diff = dot(N, normalize(vec3(0.35, 0.7, 0.55))) * 0.5 + 0.5;
+    col *= 0.7 + diff * 0.5;
+    col = mix(col, edge, fres * 0.55);        // defined dark edges on the light page
+    col = mix(col, disp, fres * 0.22);        // hint of prismatic colour
+    col = mix(col, uAccent, fres * 0.14);
+    col += spec * (1.7 - uFrost * 0.5);
 
-    // Transparent through the middle, opaque at the rim + on highlights, so the
-    // page shows through like real glass.
-    float alpha = clamp(0.14 + fres * 0.85 + spec * 1.4, 0.0, 1.0);
-
+    // Enough body to read on a light background, still glassy.
+    float alpha = clamp(mix(0.24, 0.55, uFrost) + fres * 0.55 + spec, 0.0, 1.0);
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -171,13 +178,15 @@ export function initHero() {
   });
   renderer.setClearColor(0x000000, 0);
 
-  const detail = isTouch() ? 24 : 48;
+  const detail = isTouch() ? 32 : 56;
   const geometry = new IcosahedronGeometry(1.3, detail);
 
   const uTime = { value: 0 };
   const uDistort = { value: 0 };
   const uMouse = { value: new Vector2(0, 0) };
-  const uScroll = { value: 0 };
+  const uMorph = { value: 0 };
+  const uShape = { value: 1 };
+  const uFrost = { value: 0.55 };
 
   const material = new ShaderMaterial({
     vertexShader: vertex,
@@ -188,7 +197,9 @@ export function initHero() {
       uTime,
       uDistort,
       uMouse,
-      uScroll,
+      uMorph,
+      uShape,
+      uFrost,
       uAccent: { value: new Color("#2e5bff") },
     },
   });
@@ -198,8 +209,8 @@ export function initHero() {
 
   const mouse = new Vector2(0, 0);
   const mouseTarget = new Vector2(0, 0);
+  let restY = 0;
 
-  let baseScale = 1;
   function resize() {
     const rect = canvas!.getBoundingClientRect();
     const w = rect.width || window.innerWidth;
@@ -208,11 +219,9 @@ export function initHero() {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const wide = w > 900;
-    // Sit the blob in the right third (clear of the left-aligned headline) on
-    // desktop; tuck it into the lower-right corner on phones.
     mesh.position.x = wide ? 1.85 : 1.05;
-    mesh.position.y = wide ? -0.1 : -0.9;
-    baseScale = wide ? 0.6 : 0.62;
+    restY = wide ? -0.1 : -0.9;
+    if (uMorph.value < 0.01) mesh.position.y = restY; // don't fight an active bounce
     camera.updateProjectionMatrix();
   }
   resize();
@@ -246,23 +255,58 @@ export function initHero() {
 
     uTime.value = reduced ? 0 : t;
     uMouse.value.set(mouse.x, mouse.y);
-    uScroll.value = scrollProgress;
 
+    const baseScale = (canvas!.getBoundingClientRect().width > 900 ? 0.6 : 0.62);
     mesh.scale.setScalar(baseScale * (1 + scrollProgress * 0.3));
-    mesh.rotation.y = mouse.x * 0.5 + (reduced ? 0 : t * 0.08) + scrollProgress * 1.2;
-    mesh.rotation.x = mouse.y * 0.35 + scrollProgress * 0.5;
+    // Gentle drift so flat forms (phone/website slabs) stay roughly face-on
+    // and legible rather than whipping edge-on.
+    mesh.rotation.y = mouse.x * 0.3 + (reduced ? 0 : Math.sin(t * 0.4) * 0.35) + scrollProgress * 0.8;
+    mesh.rotation.x = mouse.y * 0.22 + scrollProgress * 0.35;
 
     renderer.render(scene, camera);
   }
   renderer.setAnimationLoop(frame);
 
+  // ---- morph state machine: blob → shape → blob, advancing through SEQUENCE.
+  let si = 0;
+  function runCycle() {
+    if (reduced) return;
+    uShape.value = SEQUENCE[si];
+    const isSphere = SEQUENCE[si] === 1;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        si = (si + 1) % SEQUENCE.length;
+        runCycle();
+      },
+    });
+
+    // form the shape
+    tl.to(uMorph, { value: 1, duration: 1.0, ease: "power3.inOut" });
+
+    if (isSphere) {
+      // gravity: drop and bounce on the ground, then settle and rise back
+      tl.to(mesh.position, { y: restY - 1.0, duration: 1.3, ease: "bounce.out" }, ">-0.1");
+      tl.to({}, { duration: 0.25 });
+      tl.to(mesh.position, { y: restY, duration: 0.7, ease: "power2.inOut" });
+    } else {
+      // hold the shape with a slow extra spin handled by frame()
+      tl.to({}, { duration: 1.3 });
+    }
+
+    // melt back to the blob
+    tl.to(uMorph, { value: 0, duration: 1.0, ease: "power3.inOut" });
+    tl.to({}, { duration: 0.5 });
+  }
+
   return {
     reveal() {
       gsap.to(uDistort, {
         value: reduced ? 0.2 : 0.5,
-        duration: 1.8,
+        duration: 1.6,
         ease: "power3.out",
       });
+      if (!reduced) gsap.delayedCall(1.8, runCycle);
     },
   };
 }
