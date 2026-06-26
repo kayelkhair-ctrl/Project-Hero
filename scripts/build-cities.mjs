@@ -18,14 +18,30 @@ const list = (arr) =>
     : `${arr.slice(0, -1).join(", ")} and ${arr[arr.length - 1]}`;
 
 function cityHTML(c) {
-  const title = `Web Design & SEO ${c.name} | Digital Agency | The Project Hero`;
-  const desc = `A digital agency working with ${c.name} businesses: web design, web development, SEO and GEO visibility, and AI tools. Senior team, end to end. Get a free audit.`;
+  const isArea = c.kind === "area";
+  const region = isArea ? "Bradford" : c.region;
+  const nearbyList = list(c.nearby);
+  const title = isArea
+    ? `Web Design & SEO ${c.name}, Bradford | The Project Hero`
+    : `Web Design & SEO ${c.name} | Digital Agency | The Project Hero`;
+  const desc = isArea
+    ? `Web design, SEO and AI for businesses in ${c.name}, Bradford. A senior, end-to-end digital agency right on your doorstep. Get a free audit.`
+    : `A digital agency working with ${c.name} businesses: web design, web development, SEO and GEO visibility, and AI tools. Senior team, end to end. Get a free audit.`;
   const url = `${SITE}/${c.slug}/`;
+
+  const leadBody = isArea
+    ? `working with businesses in ${c.name} and across Bradford`
+    : `working with ambitious businesses across ${region}`;
+  const homeBase = isArea
+    ? `${c.name} is right on our doorstep. We're a Bradford-based digital agency working with businesses across ${c.name} and nearby ${nearbyList}, and right across the city. Day to day we work remotely, and we're only a short drive away when it helps to meet in person.`
+    : `We're based in Bradford, ${c.travel}, and we work with businesses right across ${c.name} and ${region}, ${c.intro} out to ${nearbyList}. Day to day we work remotely, and we come to you in ${c.name} when a project calls for it.`;
 
   const faqs = [
     {
-      q: `Do you have an office in ${c.name}?`,
-      a: `We're a Yorkshire-based digital agency working with businesses across ${c.name} and ${c.region}. We work remotely day to day and come to you in ${c.name} when it helps. Either way you work directly with senior people, not a sales layer.`,
+      q: isArea ? `Do you cover ${c.name}?` : `Do you have an office in ${c.name}?`,
+      a: isArea
+        ? `Yes. We're a Bradford-based digital agency, so ${c.name} is right on our doorstep. We work with businesses across ${c.name} and the rest of Bradford, and you work directly with senior people, not a sales layer.`
+        : `We're a Yorkshire-based digital agency working with businesses across ${c.name} and ${region}. We work remotely day to day and come to you in ${c.name} when it helps. Either way you work directly with senior people, not a sales layer.`,
     },
     {
       q: `How much does web design in ${c.name} cost?`,
@@ -45,7 +61,7 @@ function cityHTML(c) {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: "The Project Hero",
-    description: `A UK digital agency working with ${c.name} businesses on web design, web development, SEO and GEO visibility, AI applications and digital transformation.`,
+    description: `A ${isArea ? "Bradford" : "UK"} digital agency working with ${c.name} businesses on web design, web development, SEO and GEO visibility, AI applications and digital transformation.`,
     url,
     email: "info@theprojecthero.co.uk",
     telephone: "+441274505805",
@@ -56,11 +72,18 @@ function cityHTML(c) {
       postalCode: "BD4 6SE",
       addressCountry: "GB",
     },
-    areaServed: [
-      { "@type": "City", name: c.name },
-      { "@type": "AdministrativeArea", name: c.region },
-      { "@type": "Country", name: "United Kingdom" },
-    ],
+    areaServed: isArea
+      ? [
+          { "@type": "Place", name: `${c.name}, Bradford` },
+          { "@type": "City", name: "Bradford" },
+          { "@type": "AdministrativeArea", name: "West Yorkshire" },
+          { "@type": "Country", name: "United Kingdom" },
+        ]
+      : [
+          { "@type": "City", name: c.name },
+          { "@type": "AdministrativeArea", name: c.region },
+          { "@type": "Country", name: "United Kingdom" },
+        ],
     knowsAbout: [
       `Web Design ${c.name}`,
       `Web Development ${c.name}`,
@@ -107,7 +130,7 @@ function cityHTML(c) {
     <meta name="theme-color" content="#f3f1ec" />
     <link rel="canonical" href="${url}" />
     <meta property="og:title" content="Web Design &amp; SEO ${esc(c.name)} | The Project Hero" />
-    <meta property="og:description" content="Web design, web development, SEO/GEO and AI tools for ${esc(c.name)} businesses. A senior, end-to-end digital agency serving ${esc(c.region)}." />
+    <meta property="og:description" content="Web design, web development, SEO/GEO and AI tools for ${esc(c.name)} businesses. A senior, end-to-end digital agency serving ${esc(region)}." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${url}" />
     <meta property="og:locale" content="en_GB" />
@@ -151,17 +174,11 @@ ${JSON.stringify(faqSchema, null, 2)}
       <div class="studio-grid">
         <div>
           <p class="lead" data-fill>
-            A digital agency built around <em>outcomes</em>, working with
-            ambitious businesses across ${esc(c.region)}.
+            A ${isArea ? "Bradford " : ""}digital agency built around <em>outcomes</em>, ${esc(leadBody)}.
           </p>
         </div>
         <div>
-          <p class="muted" data-reveal="fade">
-            We're based in Bradford, ${esc(c.travel)}, and we work with businesses
-            right across ${esc(c.name)} and ${esc(c.region)}, ${esc(c.intro)} out to
-            ${esc(list(c.nearby))}. Day to day we work remotely, and we come to you
-            in ${esc(c.name)} when a project calls for it.
-          </p>
+          <p class="muted" data-reveal="fade">${esc(homeBase)}</p>
           <p class="muted" data-reveal="fade">
             What you get is senior people doing the actual work: strategy, design,
             engineering, SEO and AI under one roof. No hand-offs to faceless
