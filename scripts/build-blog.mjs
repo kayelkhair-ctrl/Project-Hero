@@ -115,6 +115,7 @@ const routes = [
   "/insights/",
   "/contact/",
   "/faq/",
+  "/manchester/",
 ];
 const urls = [
   ...routes.map((r) => ({ loc: SITE + r })),

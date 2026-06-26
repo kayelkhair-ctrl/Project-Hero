@@ -38,20 +38,20 @@ export function runPreloader(): Promise<void> {
       },
     });
 
+    // A quick, confident brand flash — premium without making the visitor wait.
     tl.from(mark, {
-      scale: 0.5,
+      scale: 0.7,
       autoAlpha: 0,
-      rotate: -120,
-      duration: 1,
+      rotate: -90,
+      duration: 0.5,
       ease: "power3.out",
     })
       .from(
         chars,
-        { yPercent: 120, autoAlpha: 0, stagger: 0.03, duration: 0.6, ease: "power3.out" },
-        "-=0.5"
+        { yPercent: 110, autoAlpha: 0, stagger: 0.018, duration: 0.4, ease: "power3.out" },
+        "-=0.34"
       )
-      .to(".preloader__word", { autoAlpha: 0.6, duration: 0.4 }, "-=0.3")
-      .to({}, { duration: 0.35 })
-      .to(el, { yPercent: -100, duration: 0.9, ease: "power4.inOut" });
+      .to(".preloader__word", { autoAlpha: 0.6, duration: 0.25 }, "-=0.2")
+      .to(el, { yPercent: -100, duration: 0.6, ease: "power4.inOut" }, "+=0.05");
   });
 }

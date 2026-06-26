@@ -3,19 +3,31 @@ import "./styles/base.css";
 import "./styles/sections.css";
 
 import { initSmoothScroll } from "./modules/smoothScroll";
-import { initCursor } from "./modules/cursor";
+import { initNavState } from "./modules/navState";
 import { runPreloader } from "./modules/preloader";
 import { initReveals } from "./modules/reveals";
 import { initMagnetic } from "./modules/magnetic";
 import { initMarquee } from "./modules/marquee";
 import { initMenu } from "./modules/menu";
-import { renderCapabilities } from "./modules/content";
+import {
+  renderCapabilities,
+  renderProcess,
+  renderPackages,
+  renderResultStats,
+  renderTestimonials,
+  renderClients,
+  renderHomeFaqs,
+} from "./modules/content";
 import { initCapabilitiesShowcase } from "./modules/capabilitiesShowcase";
 import { initPageTransition } from "./modules/pageTransition";
 import { initScrollText } from "./modules/scrollText";
 import { initScrollProgress } from "./modules/scrollProgress";
 import { injectMarks } from "./modules/brand";
 import { initHero } from "./gl/hero";
+
+// Mark the document as JS-capable as early as the module runs. CSS uses this
+// to scope reveal-hiding (so content is never stuck invisible without JS).
+document.documentElement.classList.add("js");
 
 function boot() {
   // Current year in footer.
@@ -26,10 +38,16 @@ function boot() {
 
   // Inject dynamic content first so reveals can measure it.
   renderCapabilities();
+  renderProcess();
+  renderResultStats();
+  renderClients();
+  renderTestimonials();
+  renderPackages();
+  renderHomeFaqs();
 
   // Interaction layer.
   initSmoothScroll();
-  initCursor();
+  initNavState();
   initMagnetic();
   initMarquee();
   initMenu();

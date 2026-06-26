@@ -481,16 +481,10 @@ export function initCapabilitiesShowcase() {
   resize();
   window.addEventListener("resize", resize);
 
-  // Pause when the showcase is off-screen.
-  let visible = true;
-  const io = new IntersectionObserver((entries) => {
-    visible = entries[0]?.isIntersecting ?? true;
-  });
-  io.observe(canvas);
-
   const draw = (now: number) => {
-    requestAnimationFrame(draw);
-    if (!visible || w === 0) return;
+    if (!running) return;
+    rafId = requestAnimationFrame(draw);
+    if (w === 0) return;
     const t = now / 1000;
     g.clearRect(0, 0, w, h);
     const mix = mixStart < 0 ? 1 : Math.min((now - mixStart) / 450, 1);
@@ -502,5 +496,19 @@ export function initCapabilitiesShowcase() {
     RENDERERS[keys[current]]?.(g, w, h, t);
     g.globalAlpha = 1;
   };
-  requestAnimationFrame(draw);
+
+  // Run the loop only while the showcase is on-screen; fully stop otherwise.
+  let running = false;
+  let rafId = 0;
+  const io = new IntersectionObserver((entries) => {
+    const onScreen = entries[0]?.isIntersecting ?? true;
+    if (onScreen && !running) {
+      running = true;
+      rafId = requestAnimationFrame(draw);
+    } else if (!onScreen && running) {
+      running = false;
+      cancelAnimationFrame(rafId);
+    }
+  });
+  io.observe(canvas);
 }

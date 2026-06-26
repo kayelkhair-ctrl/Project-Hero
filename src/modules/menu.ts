@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import { lenis } from "./smoothScroll";
 
 const LINKS = [
+  { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
   { href: "/studio/", label: "Studio" },
   { href: "/insights/", label: "Insights" },

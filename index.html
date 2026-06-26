@@ -47,7 +47,13 @@
           "postalCode": "BD4 6SE",
           "addressCountry": "GB"
         },
-        "areaServed": "GB",
+        "areaServed": [
+          { "@type": "AdministrativeArea", "name": "Yorkshire" },
+          { "@type": "City", "name": "Bradford" },
+          { "@type": "City", "name": "Manchester" },
+          { "@type": "AdministrativeArea", "name": "Greater Manchester" },
+          { "@type": "Country", "name": "United Kingdom" }
+        ],
         "knowsAbout": [
           "Digital Transformation",
           "Web Design",
@@ -94,14 +100,16 @@
     <!-- Nav -->
     <header class="nav">
       <a href="/" class="nav__brand"><span class="nav__mark"></span>The Project Hero</a>
-      <nav class="nav__links" aria-label="Primary">
-        <a href="/services/" data-cursor="See">Services</a>
-        <a href="/work/" data-cursor="View">Work</a>
-        <a href="/studio/" data-cursor="About">Studio</a>
-        <a href="/insights/" data-cursor="Read">Insights</a>
-        <a href="/contact/" data-cursor="Say hi">Contact</a>
-      </nav>
-      <button class="nav__toggle" aria-label="Open menu">Menu</button>
+      <div class="nav__right">
+        <nav class="nav__links" aria-label="Primary">
+          <a href="/services/">Services</a>
+          <a href="/work/">Work</a>
+          <a href="/studio/">Studio</a>
+          <a href="/insights/">Insights</a>
+        </nav>
+        <a href="/contact/" class="nav__cta" data-magnetic>Start a project</a>
+        <button class="nav__toggle" aria-label="Open menu">Menu</button>
+      </div>
     </header>
 
     <main>
@@ -115,16 +123,27 @@
             <span class="line"><span>and AI. Built for</span></span>
             <span class="line"><span>businesses moving ahead.</span></span>
           </h1>
-          <div class="hero__meta">
-            <p class="hero__lead" data-reveal="fade">
-              We design, build and manage websites, web applications, SEO
-              and GEO visibility systems, and AI tools for UK businesses
-              that want to move ahead of the curve. Based in Bradford,
-              working everywhere.
-            </p>
-            <span class="hero__scroll">Scroll <span class="arrow">↓</span></span>
+          <p class="hero__lead" data-reveal="fade">
+            We design, build and manage websites, SEO and GEO visibility,
+            and AI tools for UK businesses that want to move ahead of the
+            curve. One team, end to end.
+          </p>
+          <div class="hero__actions" data-reveal="fade">
+            <a href="/contact/" class="btn" data-magnetic>Get a free digital audit →</a>
+            <a href="/work/" class="btn btn--ghost" data-magnetic>See our work</a>
           </div>
+          <ul class="hero__trust" data-reveal="fade">
+            <li>Reply within one working day</li>
+            <li>Senior team, nothing outsourced</li>
+            <li>UK-based, no surprise bills</li>
+          </ul>
         </div>
+      </section>
+
+      <!-- TRUSTED BY (renders only when clients are added in src/data/site.ts) -->
+      <section class="section wrap trusted">
+        <p class="eyebrow trusted__label" data-reveal="fade">Trusted by businesses across Yorkshire &amp; the UK</p>
+        <div class="clients" id="clients-row"></div>
       </section>
 
       <!-- STATEMENT -->
@@ -170,6 +189,21 @@
         </div>
       </section>
 
+      <!-- HOW IT WORKS -->
+      <section class="section wrap" id="process">
+        <div class="section-head">
+          <h2 data-reveal="words">How working with us works</h2>
+          <p class="eyebrow" data-reveal="fade">Simple, no surprises</p>
+        </div>
+        <ol class="steps" id="process-list"></ol>
+      </section>
+
+      <!-- RESULTS (renders only when resultStats are added in src/data/site.ts) -->
+      <section class="section wrap" id="results">
+        <p class="eyebrow" data-reveal="fade">The difference it makes</p>
+        <div class="results" id="results-grid"></div>
+      </section>
+
       <!-- WHY TPH -->
       <section class="section wrap" id="why">
         <div class="section-head">
@@ -190,6 +224,15 @@
             <p style="color: var(--muted);">We don't build things and walk away. Websites get maintained, SEO compounds, AI tools evolve. Your investment keeps working.</p>
           </div>
         </div>
+      </section>
+
+      <!-- TESTIMONIALS (renders only when added in src/data/site.ts) -->
+      <section class="section wrap" id="testimonials">
+        <div class="section-head">
+          <h2 data-reveal="words">What clients say</h2>
+          <p class="eyebrow" data-reveal="fade">In their words</p>
+        </div>
+        <div class="quotes" id="testimonials-grid"></div>
       </section>
 
       <!-- STORY -->
@@ -216,6 +259,28 @@
         </div>
       </section>
 
+      <!-- PRICING / PACKAGES -->
+      <section class="section wrap" id="pricing">
+        <div class="section-head">
+          <h2 data-reveal="words">Ways to work together</h2>
+          <a href="/services/" class="eyebrow" data-reveal="fade">All services →</a>
+        </div>
+        <div class="packages" id="packages-grid"></div>
+        <p class="packages__note" data-reveal="fade">
+          Every project starts with a free audit so we can scope and quote it
+          accurately. No obligation, no hard sell.
+        </p>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section wrap" id="faq">
+        <div class="section-head">
+          <h2 data-reveal="words">Common questions</h2>
+          <a href="/faq/" class="eyebrow" data-reveal="fade">All FAQs →</a>
+        </div>
+        <div class="faqs" id="faq-list"></div>
+      </section>
+
       <!-- CTA -->
       <section class="section wrap">
         <div class="cta">
@@ -223,12 +288,23 @@
           <h2 class="cta__title" data-fill>
             Let's build something that <em>lasts</em>.
           </h2>
-          <a href="/contact/" class="btn" data-magnetic data-cursor="Let's talk">
-            Start a conversation →
+          <a href="/contact/" class="btn" data-magnetic>
+            Get a free digital audit →
           </a>
+          <ul class="cta__trust" data-reveal="fade">
+            <li>Free, no-obligation audit</li>
+            <li>Reply within one working day</li>
+            <li>Talk to the people who do the work</li>
+          </ul>
         </div>
       </section>
     </main>
+
+    <!-- Sticky mobile call-to-action -->
+    <a href="/contact/" class="cta-bar" aria-label="Start a project">
+      <span>Free digital audit</span>
+      <span class="cta-bar__go">Start →</span>
+    </a>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -265,7 +341,7 @@
           <span>
             <a href="/faq/" data-cursor="Read">FAQ</a> ·
             <a href="/privacy/" data-cursor="Read">Privacy</a> ·
-            Bradford, Yorkshire · United Kingdom
+            Bradford, Yorkshire · Serving <a href="/manchester/">Manchester</a> &amp; the UK
           </span>
         </div>
       </div>

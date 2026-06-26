@@ -1,4 +1,16 @@
-import { capabilities, projects } from "../data/site";
+import {
+  capabilities,
+  projects,
+  processSteps,
+  packages,
+  testimonials,
+  clients,
+  resultStats,
+  homeFaqs,
+} from "../data/site";
+
+const esc = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 // Builds an inline SVG gradient placeholder so we have polished "work"
 // imagery before real case-study assets exist.
@@ -41,6 +53,116 @@ export function renderCapabilities() {
   // Seed the readout with the first capability's description.
   const readout = document.getElementById("caps-readout");
   if (readout) readout.textContent = capabilities[0]?.desc ?? "";
+}
+
+// Hides a section's nearest <section> wrapper when there's nothing to show,
+// so empty proof never leaves an awkward gap.
+function hideSection(mountId: string) {
+  document.getElementById(mountId)?.closest("section")?.remove();
+}
+
+export function renderProcess(mountId = "process-list") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  el.innerHTML = processSteps
+    .map(
+      (s, i) => `
+      <li class="step" data-reveal="fade" style="--i:${i}">
+        <span class="step__num">${esc(s.num)}</span>
+        <h3 class="step__name">${esc(s.name)}</h3>
+        <p class="step__desc">${esc(s.desc)}</p>
+      </li>`
+    )
+    .join("");
+}
+
+export function renderPackages(mountId = "packages-grid") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  if (!packages.length) return hideSection(mountId);
+  el.innerHTML = packages
+    .map(
+      (p) => `
+      <article class="pkg${p.featured ? " pkg--featured" : ""}" data-reveal="fade">
+        ${p.featured ? '<span class="pkg__badge">Most popular</span>' : ""}
+        <h3 class="pkg__name">${esc(p.name)}</h3>
+        <p class="pkg__price">${
+          p.price
+            ? `${p.cadence === "from" ? '<span class="pkg__from">from</span> ' : ""}${esc(p.price)}${
+                p.cadence && p.cadence !== "from" ? `<span class="pkg__cadence">${esc(p.cadence)}</span>` : ""
+              }`
+            : '<span class="pkg__onrequest">On request</span>'
+        }</p>
+        <p class="pkg__summary">${esc(p.summary)}</p>
+        <ul class="pkg__list">
+          ${p.includes.map((i) => `<li>${esc(i)}</li>`).join("")}
+        </ul>
+        <a href="/contact/" class="btn ${p.featured ? "" : "btn--ghost"} pkg__cta" data-magnetic>${esc(
+          p.cta || "Get a quote"
+        )} →</a>
+      </article>`
+    )
+    .join("");
+}
+
+export function renderResultStats(mountId = "results-grid") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  if (!resultStats.length) return hideSection(mountId);
+  el.innerHTML = resultStats
+    .map(
+      (s) => `
+      <div class="result" data-reveal="fade">
+        <span class="result__value">${esc(s.value)}</span>
+        <span class="result__label">${esc(s.label)}</span>
+      </div>`
+    )
+    .join("");
+}
+
+export function renderTestimonials(mountId = "testimonials-grid") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  if (!testimonials.length) return hideSection(mountId);
+  el.innerHTML = testimonials
+    .map(
+      (t) => `
+      <figure class="quote" data-reveal="fade">
+        <blockquote class="quote__text">${esc(t.quote)}</blockquote>
+        <figcaption class="quote__by">
+          <span class="quote__name">${esc(t.name)}</span>
+          <span class="quote__role">${esc(t.role)}</span>
+        </figcaption>
+      </figure>`
+    )
+    .join("");
+}
+
+export function renderClients(mountId = "clients-row") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  if (!clients.length) return hideSection(mountId);
+  el.innerHTML = clients
+    .map((c) =>
+      c.logo
+        ? `<img class="client__logo" src="${esc(c.logo)}" alt="${esc(c.name)}" loading="lazy" />`
+        : `<span class="client__name">${esc(c.name)}</span>`
+    )
+    .join("");
+}
+
+export function renderHomeFaqs(mountId = "faq-list") {
+  const el = document.getElementById(mountId);
+  if (!el) return;
+  el.innerHTML = homeFaqs
+    .map(
+      (f) => `
+      <details class="faq" data-reveal="fade">
+        <summary class="faq__q">${esc(f.q)}<span class="faq__icon" aria-hidden="true"></span></summary>
+        <p class="faq__a">${esc(f.a)}</p>
+      </details>`
+    )
+    .join("");
 }
 
 export function renderWork(targetId = "work-grid") {

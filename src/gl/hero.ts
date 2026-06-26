@@ -49,15 +49,18 @@ export function initHero() {
     const size = canvas!.offsetWidth;
     if (!size || globe) return;
 
+    // Lighter on smaller screens: fewer dots + capped DPR keeps the globe
+    // smooth on phones/laptops without a visible drop in quality.
+    const small = window.innerWidth < 820;
     globe = createGlobe(canvas!, {
-      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2),
       width: size,
       height: size,
       phi: 0,
       theta: 0.28,
       dark: 0,
       diffuse: 1.1,
-      mapSamples: 16000,
+      mapSamples: small ? 8000 : 12000,
       mapBrightness: 7,
       baseColor: [0.88, 0.86, 0.82] as [number, number, number],
       markerColor: [0.18, 0.36, 1.0] as [number, number, number],

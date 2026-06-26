@@ -18,7 +18,7 @@ export function initPageTransition() {
     gsap.to(overlay, {
       scaleY: 0,
       transformOrigin: "top",
-      duration: 0.7,
+      duration: 0.5,
       ease: "power4.inOut",
       onComplete: () => sessionStorage.removeItem(NAV_FLAG),
     });
@@ -44,7 +44,7 @@ export function initPageTransition() {
     gsap.set(overlay, { transformOrigin: "bottom", scaleY: 0 });
     gsap.to(overlay, {
       scaleY: 1,
-      duration: 0.6,
+      duration: 0.4,
       ease: "power4.inOut",
       onComplete: () => {
         window.location.href = url.href;

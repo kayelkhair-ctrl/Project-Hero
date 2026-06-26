@@ -114,9 +114,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: clamp(1rem, 2vw, 1.75rem) var(--gutter);
-  mix-blend-mode: difference;
+  gap: 1.5rem;
+  padding: clamp(0.85rem, 1.7vw, 1.4rem) var(--gutter);
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s var(--ease), backdrop-filter 0.4s var(--ease),
+    border-color 0.4s var(--ease), padding 0.4s var(--ease);
+}
+/* Frosted bar once the visitor scrolls — keeps the nav readable over every
+   section without the costly mix-blend-mode repaint it used before. */
+.nav.is-scrolled {
+  background: rgba(243, 241, 236, 0.82);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom-color: var(--line);
+}
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.1rem, 2.4vw, 2.25rem);
+}
+.nav__cta {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  white-space: nowrap;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+.nav__cta:hover {
+  background: var(--accent);
   color: #fff;
+  transform: translateY(-1px);
 }
 .nav__brand {
   font-family: var(--font-display);
@@ -842,9 +876,388 @@
 }
 
 /* ============================================================
+   HERO ACTIONS + TRUST CHIPS (home)
+   ============================================================ */
+.hero__lead {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+.hero__trust li,
+.cta__trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero__trust li::before,
+.cta__trust li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 auto;
+}
+
+/* ============================================================
+   TRUSTED BY (logo strip)
+   ============================================================ */
+.trusted {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+.trusted__label {
+  text-align: center;
+  display: block;
+  margin-bottom: 1.75rem;
+}
+.clients {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+.client__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  color: var(--muted);
+  letter-spacing: -0.01em;
+}
+.client__logo {
+  height: clamp(26px, 4vw, 42px);
+  width: auto;
+  opacity: 0.65;
+  filter: grayscale(1);
+}
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(2rem, 4vw, 3rem);
+}
+.step__num {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.step__name {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  margin: 0.75rem 0 0.6rem;
+}
+.step__desc {
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   RESULTS BAND
+   ============================================================ */
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  margin-top: 1.5rem;
+}
+.result {
+  display: grid;
+  gap: 0.5rem;
+}
+.result__value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.result__label {
+  color: var(--muted);
+  max-width: 22ch;
+}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.quote {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--bg-2);
+  display: grid;
+  gap: 1.5rem;
+}
+.quote__text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.quote__by {
+  display: grid;
+  gap: 0.2rem;
+}
+.quote__name {
+  font-weight: 500;
+}
+.quote__role {
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+/* ============================================================
+   PACKAGES / PRICING
+   ============================================================ */
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+.pkg {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--bg);
+}
+.pkg--featured {
+  border-color: var(--ink);
+  background: var(--bg-2);
+}
+.pkg__badge {
+  position: absolute;
+  top: -0.7rem;
+  left: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+.pkg__name {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+}
+.pkg__price {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.pkg__from {
+  font-size: var(--fs-small);
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.pkg__cadence {
+  font-size: 1rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.pkg__onrequest {
+  font-size: var(--fs-h3);
+  color: var(--muted);
+  font-weight: 500;
+}
+.pkg__summary {
+  color: var(--muted);
+}
+.pkg__list {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+.pkg__list li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--ink-2);
+}
+.pkg__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.pkg__cta {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+}
+.packages__note {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: var(--fs-small);
+  max-width: 52ch;
+}
+@media (max-width: 900px) {
+  .packages {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   FAQ (accordion)
+   ============================================================ */
+.faqs {
+  border-top: 1px solid var(--line);
+  max-width: 82ch;
+}
+.faq {
+  border-bottom: 1px solid var(--line);
+  padding: clamp(1.1rem, 2.5vw, 1.6rem) 0;
+}
+.faq__q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+.faq__icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+.faq__icon::before,
+.faq__icon::after {
+  content: "";
+  position: absolute;
+  background: var(--accent);
+  transition: transform 0.3s var(--ease);
+}
+.faq__icon::before {
+  left: 0;
+  top: 8px;
+  width: 18px;
+  height: 2px;
+}
+.faq__icon::after {
+  left: 8px;
+  top: 0;
+  width: 2px;
+  height: 18px;
+}
+.faq[open] .faq__icon::after {
+  transform: scaleY(0);
+}
+.faq__a {
+  color: var(--muted);
+  margin-top: 1rem;
+  max-width: 72ch;
+}
+
+/* ============================================================
+   CTA TRUST + STICKY MOBILE CTA
+   ============================================================ */
+.cta__trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 1.6rem;
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+.cta-bar {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.3rem;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  box-shadow: 0 14px 40px -16px rgba(11, 11, 11, 0.55);
+  transform: translateY(160%);
+  transition: transform 0.5s var(--ease);
+}
+.cta-bar__go {
+  color: #fff;
+  opacity: 0.85;
+}
+.cta-bar.is-visible {
+  transform: translateY(0);
+}
+@media (max-width: 720px) {
+  .cta-bar {
+    display: flex;
+  }
+}
+
+/* ============================================================
    SCROLL REVEAL primitives
    ============================================================ */
-[data-reveal] {
+/* Only hide reveal targets when JS is present to animate them back in.
+   Without JS (or if the bundle fails) the content stays visible. */
+.js [data-reveal] {
   opacity: 0;
 }
 .line-mask {

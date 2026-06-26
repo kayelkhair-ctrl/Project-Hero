@@ -27,8 +27,16 @@ export function initMarquee() {
     },
   });
 
+  // Only burn frames while the marquee is actually in view.
+  let visible = true;
+  const io = new IntersectionObserver((entries) => {
+    visible = entries[0]?.isIntersecting ?? true;
+  });
+  io.observe(track);
+
   const width = (item as HTMLElement).offsetWidth + 56; // + gap
   gsap.ticker.add(() => {
+    if (!visible) return;
     x -= baseSpeed + Math.abs(velocity);
     if (-x >= width) x += width;
     gsap.set(track, { x });

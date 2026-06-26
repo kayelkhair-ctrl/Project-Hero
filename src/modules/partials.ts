@@ -14,15 +14,20 @@ export function injectChrome(current = "") {
     navMount.outerHTML = `
       <header class="nav">
         <a href="/" class="nav__brand"><span class="nav__mark"></span>The Project Hero</a>
-        <nav class="nav__links" aria-label="Primary">
-          ${NAV_LINKS.map(
-            (l) =>
-              `<a href="${l.href}" data-cursor="${l.cursor}"${
-                l.href.startsWith("/" + current) && current ? ' aria-current="page"' : ""
-              }>${l.label}</a>`
-          ).join("")}
-        </nav>
-        <button class="nav__toggle" aria-label="Open menu">Menu</button>
+        <div class="nav__right">
+          <nav class="nav__links" aria-label="Primary">
+            ${NAV_LINKS.filter((l) => l.href !== "/contact/")
+              .map(
+                (l) =>
+                  `<a href="${l.href}"${
+                    l.href.startsWith("/" + current) && current ? ' aria-current="page"' : ""
+                  }>${l.label}</a>`
+              )
+              .join("")}
+          </nav>
+          <a href="/contact/" class="nav__cta" data-magnetic>Start a project</a>
+          <button class="nav__toggle" aria-label="Open menu">Menu</button>
+        </div>
       </header>`;
   }
 
@@ -61,7 +66,7 @@ export function injectChrome(current = "") {
             <span>
               <a href="/faq/" data-cursor="Read">FAQ</a> ·
               <a href="/privacy/" data-cursor="Read">Privacy</a> ·
-              Bradford, Yorkshire · United Kingdom
+              Bradford, Yorkshire · Serving <a href="/manchester/">Manchester</a> &amp; the UK
             </span>
           </div>
         </div>

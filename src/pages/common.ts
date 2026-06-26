@@ -4,7 +4,7 @@ import "../styles/sections.css";
 import "../styles/pages.css";
 
 import { initSmoothScroll } from "../modules/smoothScroll";
-import { initCursor } from "../modules/cursor";
+import { initNavState } from "../modules/navState";
 import { initReveals } from "../modules/reveals";
 import { initMagnetic } from "../modules/magnetic";
 import { initMenu } from "../modules/menu";
@@ -12,6 +12,9 @@ import { initPageTransition } from "../modules/pageTransition";
 import { initScrollText } from "../modules/scrollText";
 import { initScrollProgress } from "../modules/scrollProgress";
 import { injectMarks } from "../modules/brand";
+
+// Mark the document as JS-capable as early as the module runs (see main.ts).
+document.documentElement.classList.add("js");
 
 // Shared interaction layer for every page except the home hero experience.
 export function initCommon() {
@@ -21,14 +24,11 @@ export function initCommon() {
   injectMarks();
 
   initSmoothScroll();
-  initCursor();
+  initNavState();
   initMagnetic();
   initMenu();
   initPageTransition();
   initScrollProgress();
   initReveals();
   initScrollText();
-
-  // Quick page-in fade (no heavy preloader on inner pages).
-  requestAnimationFrame(() => document.body.classList.add("is-ready"));
 }
