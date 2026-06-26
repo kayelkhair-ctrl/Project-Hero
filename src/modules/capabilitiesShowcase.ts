@@ -230,16 +230,27 @@ const ai: Draw = (g, w, h, t) => {
   const typed = Math.max(0, Math.min(userMsg.length, Math.floor((tc / 1.6) * userMsg.length)));
   const userText = userMsg.slice(0, typed);
 
-  // user bubble (right)
-  g.font = `500 ${Math.round(h * 0.052)}px "Space Grotesk", sans-serif`;
-  const ubw = Math.min(bw * 0.7, g.measureText(userMsg).width + 36);
+  // user bubble (right) — auto-fit so the message never clips. Size the bubble
+  // to the full message (stable width while typing), shrinking the font if it
+  // would exceed the available width.
+  const uPad = Math.round(h * 0.045);
+  let uFont = Math.round(h * 0.052);
+  g.font = `500 ${uFont}px "Space Grotesk", sans-serif`;
+  const uMaxText = bw - uPad * 2;
+  let uTextW = g.measureText(userMsg).width;
+  if (uTextW > uMaxText) {
+    uFont = Math.max(9, Math.floor((uFont * uMaxText) / uTextW));
+    g.font = `500 ${uFont}px "Space Grotesk", sans-serif`;
+    uTextW = g.measureText(userMsg).width;
+  }
+  const ubw = uTextW + uPad * 2;
   const uy = h * 0.26;
   g.fillStyle = ACCENT;
   roundRect(g, pad + bw - ubw, uy, ubw, h * 0.13, 12);
   g.fill();
   g.fillStyle = "#fff";
   g.textBaseline = "middle";
-  g.fillText(userText + (typed < userMsg.length && tc < 1.7 ? "▌" : ""), pad + bw - ubw + 18, uy + h * 0.065);
+  g.fillText(userText + (typed < userMsg.length && tc < 1.7 ? "▌" : ""), pad + bw - ubw + uPad, uy + h * 0.065);
 
   // assistant bubble (left) — appears after the question
   if (tc > 1.9) {

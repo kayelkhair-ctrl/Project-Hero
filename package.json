@@ -6,9 +6,11 @@
   "description": "The Project Hero — immersive 3D creative studio website",
   "scripts": {
     "blog": "node scripts/build-blog.mjs",
-    "predev": "node scripts/build-blog.mjs",
+    "cities": "node scripts/build-cities.mjs",
+    "gen": "node scripts/build-cities.mjs && node scripts/build-blog.mjs",
+    "predev": "npm run gen",
     "dev": "vite",
-    "prebuild": "node scripts/build-blog.mjs",
+    "prebuild": "npm run gen",
     "build": "vite build",
     "preview": "vite preview"
   },
