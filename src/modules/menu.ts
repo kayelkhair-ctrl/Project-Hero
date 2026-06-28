@@ -1,5 +1,4 @@
 import { gsap } from "gsap";
-import { lenis } from "./smoothScroll";
 
 const LINKS = [
   { href: "/services/", label: "Services" },
@@ -38,14 +37,11 @@ export function initMenu() {
     overlay.setAttribute("aria-hidden", String(!open));
     document.body.style.overflow = open ? "hidden" : "";
     if (open) {
-      lenis?.stop();
       gsap.fromTo(
         links,
         { yPercent: 120, opacity: 0 },
         { yPercent: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.06, delay: 0.1 }
       );
-    } else {
-      lenis?.start();
     }
   };
 

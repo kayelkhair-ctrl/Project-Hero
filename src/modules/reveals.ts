@@ -1,64 +1,48 @@
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import { $$ } from "../lib/utils";
 
-gsap.registerPlugin(ScrollTrigger);
-
-// Wires every [data-reveal] element to a scroll-triggered entrance.
-//   data-reveal="fade"  -> simple fade + rise
-//   data-reveal="lines" -> per-line mask reveal (expects .line > span markup)
-//   data-reveal="words" -> split into words and stagger up
+// Gentle fade-in as elements enter the viewport. Deliberately simple and
+// robust: an element gets .is-revealed once it's in view and CSS handles the
+// fade. IntersectionObserver does this efficiently where it can; a scroll
+// listener backs it up so content is shown reliably and is never stuck hidden.
 export function initReveals() {
-  // FADE
-  $$('[data-reveal="fade"]').forEach((el) => {
-    gsap.fromTo(
-      el,
-      { autoAlpha: 0, y: 28 },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 85%" },
-      }
-    );
-  });
+  const els = $$("[data-reveal]");
+  if (!els.length) return;
 
-  // LINES (pre-marked .line > span)
-  $$('[data-reveal="lines"]').forEach((el) => {
-    const spans = $$(".line > span", el);
-    gsap.set(el, { autoAlpha: 1 });
-    gsap.fromTo(
-      spans,
-      { yPercent: 110 },
-      {
-        yPercent: 0,
-        duration: 1.1,
-        ease: "power4.out",
-        stagger: 0.12,
-        scrollTrigger: { trigger: el, start: "top 90%" },
-      }
-    );
-  });
+  const reveal = (el: Element) => el.classList.add("is-revealed");
+  const inView = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    return r.top < window.innerHeight * 0.92 && r.bottom > 0;
+  };
 
-  // WORDS (split on the fly)
-  $$('[data-reveal="words"]').forEach((el) => {
-    const split = new SplitType(el, { types: "words" });
-    gsap.set(el, { autoAlpha: 1 });
-    gsap.fromTo(
-      split.words,
-      { yPercent: 120, opacity: 0 },
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.9,
-        ease: "power4.out",
-        stagger: 0.04,
-        scrollTrigger: { trigger: el, start: "top 88%" },
-      }
-    );
-  });
+  // Elements still waiting to be revealed (drives the scroll fallback).
+  let pending = els.slice();
+  const sweep = () => {
+    pending = pending.filter((el) => {
+      if (!inView(el)) return true;
+      reveal(el);
+      return false;
+    });
+    if (!pending.length) window.removeEventListener("scroll", onScroll);
+  };
+  const onScroll = () => sweep();
 
-  ScrollTrigger.refresh();
+  // Efficient path: reveal each element the moment it scrolls into view.
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          reveal(e.target);
+          obs.unobserve(e.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.01 }
+    );
+    els.forEach((el) => io.observe(el));
+  }
+
+  // Reveal whatever is already on screen, then watch scroll for the rest.
+  sweep();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("load", sweep, { once: true });
 }

@@ -1,15 +1,6 @@
 import createGlobe from "cobe";
 import { isTouch, prefersReducedMotion } from "../lib/utils";
 
-const MARKERS: { location: [number, number]; size: number }[] = [
-  { location: [53.8, -1.75], size: 0.04 },    // Bradford (home)
-  { location: [51.51, -0.13], size: 0.03 },   // London
-  { location: [40.71, -74.01], size: 0.025 }, // New York
-  { location: [48.85, 2.35], size: 0.025 },   // Paris
-  { location: [35.68, 139.65], size: 0.025 }, // Tokyo
-  { location: [-33.87, 151.21], size: 0.025 },// Sydney
-];
-
 export function initHero() {
   const canvas = document.getElementById("gl") as HTMLCanvasElement | null;
   if (!canvas) return;
@@ -66,7 +57,7 @@ export function initHero() {
       markerColor: [0.18, 0.36, 1.0] as [number, number, number],
       glowColor: [0.96, 0.94, 0.91] as [number, number, number],
       markerElevation: 0,
-      markers: MARKERS,
+      markers: [],
     });
 
     // cobe wraps the canvas in a `position:relative; width:100%; height:100%` div.

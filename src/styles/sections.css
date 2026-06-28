@@ -1,64 +1,4 @@
 /* ============================================================
-   PRELOADER
-   ============================================================ */
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-preloader);
-  background: var(--ink);
-  color: var(--bg);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-.preloader__count {
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 18vw, 16rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.preloader__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(1rem, 2.5vw, 1.75rem);
-  color: var(--bg);
-}
-.preloader__mark {
-  width: clamp(64px, 12vw, 132px);
-  height: clamp(64px, 12vw, 132px);
-  display: inline-flex;
-}
-.preloader__mark svg {
-  width: 100%;
-  height: 100%;
-}
-.preloader__mark .mark__orbit {
-  transform-box: view-box;
-  transform-origin: 20px 20px;
-  animation: orbit 6s linear infinite;
-}
-.preloader__name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.75rem, 5vw, 3.25rem);
-  letter-spacing: -0.02em;
-  overflow: hidden;
-}
-.preloader__word {
-  position: absolute;
-  bottom: clamp(1.5rem, 4vw, 3rem);
-  left: var(--gutter);
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: var(--fs-small);
-  opacity: 0.6;
-}
-
-/* ============================================================
    CUSTOM CURSOR
    ============================================================ */
 .cursor {
@@ -176,16 +116,6 @@
 .nav__mark svg {
   width: 100%;
   height: 100%;
-}
-.nav__mark .mark__orbit {
-  transform-box: view-box;
-  transform-origin: 20px 20px;
-  animation: orbit 8s linear infinite;
-}
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
-  }
 }
 .nav__links {
   display: flex;
@@ -383,9 +313,10 @@
 .statement em {
   font-style: normal;
 }
-/* keep words on their own line-height while filling */
-[data-fill] .word {
-  transition: none;
+/* The emphasised word in a statement lands on the accent colour. */
+[data-fill] em {
+  font-style: normal;
+  color: var(--accent);
 }
 
 /* ============================================================
@@ -695,35 +626,6 @@
 }
 
 /* ============================================================
-   MARQUEE
-   ============================================================ */
-.marquee {
-  overflow: hidden;
-  border-block: 1px solid var(--line);
-  padding-block: clamp(1.25rem, 2.5vw, 2rem);
-  white-space: nowrap;
-}
-.marquee__track {
-  display: inline-flex;
-  gap: 3.5rem;
-  align-items: center;
-  will-change: transform;
-}
-.marquee__item {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 3rem);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  display: inline-flex;
-  align-items: center;
-  gap: 3.5rem;
-  color: var(--ink);
-}
-.marquee__item .star {
-  color: var(--accent);
-}
-
-/* ============================================================
    CONTACT CTA
    ============================================================ */
 .cta {
@@ -852,11 +754,6 @@
   width: 100%;
   height: 100%;
 }
-.footer__mark .mark__orbit {
-  transform-box: view-box;
-  transform-origin: 20px 20px;
-  animation: orbit 9s linear infinite;
-}
 .footer__mega-text {
   font-family: var(--font-display);
   font-weight: 600;
@@ -954,6 +851,7 @@
   gap: clamp(1.5rem, 3vw, 2.5rem);
   border-top: 1px solid var(--line);
   padding-top: clamp(2rem, 4vw, 3rem);
+  list-style: none; /* the styled .step__num is the only number we want */
 }
 .step__num {
   font-family: var(--font-display);
@@ -1255,12 +1153,38 @@
 /* ============================================================
    SCROLL REVEAL primitives
    ============================================================ */
-/* Only hide reveal targets when JS is present to animate them back in.
-   Without JS (or if the bundle fails) the content stays visible. */
+/* Gentle fade-in. Reveal targets are only hidden when JS is present to bring
+   them back (without JS, or if the bundle fails, content stays visible). An
+   IntersectionObserver adds .is-revealed as each element enters view. */
 .js [data-reveal] {
   opacity: 0;
+  transform: translateY(24px);
+}
+/* Transition only on the way in, so applying .js hides instantly (no
+   load-time fade-out flicker) and the fade plays when .is-revealed lands. */
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+/* Failsafe: content must never stay hidden. If the scroll reveal can't run for
+   any reason (JS error, exotic browser), this brings each element in on its
+   own shortly after load. The scroll reveal normally wins well before this. */
+.js [data-reveal]:not(.is-revealed) {
+  animation: ph-reveal-in 0.7s ease 2.4s forwards;
+}
+@keyframes ph-reveal-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .line-mask {
   overflow: hidden;
   display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    transform: none;
+  }
 }
