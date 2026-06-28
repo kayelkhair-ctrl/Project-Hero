@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import { marked } from "marked";
 import { cityRoutes } from "./cities.mjs";
+import { serviceRoutes } from "./service-pages.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const blogDir = join(root, "src", "content", "blog");
@@ -122,6 +123,7 @@ const routes = [
 ];
 const urls = [
   ...routes.map((r) => ({ loc: SITE + r })),
+  ...serviceRoutes.map((r) => ({ loc: SITE + r })),
   ...cityRoutes.map((r) => ({ loc: SITE + r })),
   ...posts.map((p) => ({ loc: `${SITE}/insights/${p.slug}/`, lastmod: p.date })),
 ];

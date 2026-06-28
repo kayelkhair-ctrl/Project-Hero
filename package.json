@@ -7,7 +7,7 @@
   "scripts": {
     "blog": "node scripts/build-blog.mjs",
     "cities": "node scripts/build-cities.mjs",
-    "gen": "node scripts/build-cities.mjs && node scripts/build-blog.mjs",
+    "gen": "node scripts/build-cities.mjs && node scripts/build-service-pages.mjs && node scripts/build-blog.mjs",
     "predev": "npm run gen",
     "dev": "vite",
     "prebuild": "npm run gen",
