@@ -66,6 +66,7 @@ export function injectChrome(current = "") {
             <span>
               <a href="/faq/" data-cursor="Read">FAQ</a> ·
               <a href="/privacy/" data-cursor="Read">Privacy</a> ·
+              <a href="/terms/" data-cursor="Read">Terms</a> ·
               Bradford, Yorkshire · Serving <a href="/manchester/">Manchester</a> &amp; the UK
             </span>
           </div>

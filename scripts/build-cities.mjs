@@ -67,9 +67,8 @@ function cityHTML(c) {
     telephone: "+441274505805",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Euroway House, Roydsdale Way",
       addressLocality: "Bradford",
-      postalCode: "BD4 6SE",
+      addressRegion: "Yorkshire",
       addressCountry: "GB",
     },
     areaServed: isArea

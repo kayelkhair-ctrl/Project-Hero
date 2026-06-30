@@ -628,6 +628,130 @@ export const servicePages = [
       { label: "SEO and GEO visibility", href: "/services/seo-geo/" },
     ],
   },
+
+  {
+    // "bespoke web design" 1,600/mo + "custom website design" 880
+    slug: "bespoke-web-design",
+    name: "Bespoke web design",
+    title: "Bespoke Web Design | Custom-Built, Not Templated | The Project Hero",
+    description:
+      "Bespoke web design for UK businesses: fully custom websites designed and built from scratch around your brand and your customers — no templates, no page-builder bloat, no lock-in. Bradford, Yorkshire.",
+    ogDescription:
+      "Bespoke web design: fully custom websites built from scratch around your brand, not a template everyone else is using.",
+    h1: "Bespoke web design, built around you — not a template.",
+    intro:
+      "Most websites are the same theme with a different logo. A bespoke site is designed and built from scratch around your business, your brand and the way your customers actually decide. It looks like no one else's, and it performs because every decision was made for you.",
+    leadHtml: "A template makes you look like everyone else. Bespoke makes you look like <em>you</em>.",
+    body: [
+      "Template and page-builder sites are quick and cheap, and it shows. They carry layout choices made for a generic business, load slowly under the weight of features you'll never use, and leave you looking interchangeable with every competitor who bought the same theme. For a lot of businesses that's a ceiling on how credible — and how findable — they can be.",
+      "Bespoke is the opposite approach: we start from your goals and your customers, design something genuinely yours, and build it on clean, lightweight code we write ourselves. That means faster pages, better search performance, a design that reflects your brand properly, and a site you own outright — no proprietary builder holding your business hostage.",
+    ],
+    included: [
+      {
+        h3: "Designed from scratch",
+        p: "A custom design shaped around your brand, your message and how your customers buy — not a stock theme with your colours dropped in.",
+      },
+      {
+        h3: "Clean, fast, owned code",
+        p: "Hand-built on lightweight foundations for speed and search performance, with no page-builder bloat and no platform lock-in.",
+      },
+      {
+        h3: "Built to convert and rank",
+        p: "Structure, messaging and on-page SEO designed in from the start, so the site earns enquiries rather than just looking the part.",
+      },
+    ],
+    sectionTwo: {
+      h2: "Is bespoke right for you?",
+      body: [
+        "Bespoke earns its keep when your website genuinely matters to the business — when you're competing on credibility, when an off-the-shelf look would undersell you, or when you need things a template simply can't do. If you mainly need a simple presence quickly, we'll tell you honestly that a lighter build is better value.",
+        "Either way you talk directly to the senior people designing and building it, and you can have it fully looked after on one of our Website as a Service plans — so bespoke doesn't have to mean a big one-off bill.",
+      ],
+    },
+    faqs: [
+      {
+        q: "What does bespoke web design mean?",
+        a: "It means your website is designed and built from scratch, specifically for your business, rather than adapted from a ready-made template or theme. The design, structure and code are all created around your goals — so it's unique to you and built to perform.",
+      },
+      {
+        q: "Is bespoke web design worth the cost?",
+        a: "If your website is important to winning customers, usually yes. Bespoke sites are faster, better for SEO, properly on-brand and fully yours to own. If your needs are simple, we'll say so and recommend a lighter option — we quote honestly after a free audit.",
+      },
+      {
+        q: "Will I be locked into a platform?",
+        a: "No. We build on clean, open foundations and you own the result outright. There's no proprietary page builder you're forced to keep paying for, and you're free to host or maintain it however you like.",
+      },
+    ],
+    schemaName: "Bespoke Web Design",
+    schemaDescription:
+      "Fully custom, bespoke web design and development for UK businesses: designed from scratch, built on clean owned code, optimised to convert and rank.",
+    related: [
+      { label: "Web design and development", href: "/services/web-design-development/" },
+      { label: "Small business web design", href: "/services/small-business-web-design/" },
+      { label: "Website redesign", href: "/services/website-redesign/" },
+    ],
+  },
+
+  {
+    // "marketing automation agency uk" 110/mo + "marketing automation" terms
+    slug: "marketing-automation",
+    name: "Marketing automation",
+    title: "Marketing Automation Agency UK | The Project Hero",
+    description:
+      "Marketing automation for UK businesses: email flows, lead nurturing and CRM workflows that follow up, convert and retain customers automatically. Senior team in Bradford, Yorkshire.",
+    ogDescription:
+      "Marketing automation that follows up, nurtures and converts on autopilot: email flows, lead nurturing and CRM workflows.",
+    h1: "Marketing automation that follows up so you don't have to.",
+    intro:
+      "Most leads never get a second touch, and most customers never hear from you again. Marketing automation fixes that quietly in the background — the right message, to the right person, at the right moment, without anyone remembering to send it.",
+    leadHtml: "The money is rarely in the first email. It's in the <em>follow-up</em> nobody sends.",
+    body: [
+      "Businesses spend hard-won time and budget generating enquiries, then let them go cold because there's no time to chase. A new lead waits days for a reply; a quote never gets followed up; a past customer who'd happily buy again simply drifts away. Each gap is revenue leaking out, and it's almost always a process problem, not an effort problem.",
+      "Marketing automation closes those gaps with systems that run themselves: welcome and nurture sequences that build trust, follow-ups that fire the moment someone enquires, win-back messages to past customers, and CRM workflows that keep everything tidy. We design it around your business and your tools, so it feels personal — not like a robot.",
+    ],
+    included: [
+      {
+        h3: "Email & lead nurture flows",
+        p: "Automated welcome, nurture and follow-up sequences that turn new enquiries and sign-ups into customers without manual chasing.",
+      },
+      {
+        h3: "CRM & pipeline workflows",
+        p: "Your CRM set up to capture, tag and route leads automatically, so nothing slips through the cracks and your team always knows what's next.",
+      },
+      {
+        h3: "Retention & win-back",
+        p: "Lifecycle, re-engagement and win-back campaigns that bring quiet customers back and make each one worth more over time.",
+      },
+    ],
+    sectionTwo: {
+      h2: "Built around your tools",
+      body: [
+        "We work with the platforms you already use — Mailchimp, HubSpot, Klaviyo, ActiveCampaign and the rest — or recommend one if you're starting fresh. The goal is automation that fits your business and your stack, not another disconnected tool to manage.",
+        "And because we also build the websites, forms and AI tools these flows connect to, it all joins up: a visitor becomes a lead, the lead gets nurtured, and the customer gets looked after — one system instead of five that don't talk to each other.",
+      ],
+    },
+    faqs: [
+      {
+        q: "What is marketing automation?",
+        a: "It's using software to send the right marketing messages automatically based on what someone does — signing up, enquiring, buying or going quiet. Things like welcome emails, lead nurturing and follow-ups happen on their own, so you stay in touch without doing it by hand.",
+      },
+      {
+        q: "How is this different from your AI automation?",
+        a: "Marketing automation focuses on customer communication — email flows, nurturing and retention. Our AI automation work is broader, covering internal workflows and custom AI tools. They overlap, and we'll often combine them, but this page is about automating your marketing follow-up specifically.",
+      },
+      {
+        q: "Which platform do I need?",
+        a: "Whichever fits your business — we work with Mailchimp, HubSpot, Klaviyo, ActiveCampaign and others, and we'll recommend honestly rather than pushing one. If you already have a tool, we'll usually build on it rather than move you.",
+      },
+    ],
+    schemaName: "Marketing Automation",
+    schemaDescription:
+      "Marketing automation for UK businesses: email and lead-nurture flows, CRM workflows and retention campaigns that follow up and convert automatically.",
+    related: [
+      { label: "AI automation", href: "/services/ai-automation/" },
+      { label: "Conversion rate optimisation", href: "/services/conversion-rate-optimisation/" },
+      { label: "SEO and GEO visibility", href: "/services/seo-geo/" },
+    ],
+  },
 ];
 
 export const serviceRoutes = servicePages.map((s) => `/services/${s.slug}/`);
